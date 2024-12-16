@@ -1,0 +1,60 @@
+<odoo>
+  <data>
+    <!-- explicit list view definition -->
+<!--
+    <record model="ir.ui.view" id="keuangan.list">
+      <field name="name">keuangan list</field>
+      <field name="model">keuangan.keuangan</field>
+      <field name="arch" type="xml">
+        <list>
+          <field name="name"/>
+          <field name="value"/>
+          <field name="value2"/>
+        </list>
+      </field>
+    </record>
+-->
+
+    <!-- actions opening views on models -->
+<!--
+    <record model="ir.actions.act_window" id="keuangan.action_window">
+      <field name="name">keuangan window</field>
+      <field name="res_model">keuangan.keuangan</field>
+      <field name="view_mode">list,form</field>
+    </record>
+-->
+
+    <!-- server action to the one above -->
+<!--
+    <record model="ir.actions.server" id="keuangan.action_server">
+      <field name="name">keuangan server</field>
+      <field name="model_id" ref="model_keuangan_keuangan"/>
+      <field name="state">code</field>
+      <field name="code">
+        action = {
+          "type": "ir.actions.act_window",
+          "view_mode": "list,form",
+          "res_model": model._name,
+        }
+      </field>
+    </record>
+-->
+
+    <!-- Top menu item -->
+<!--
+    <menuitem name="keuangan" id="keuangan.menu_root"/>
+-->
+    <!-- menu categories -->
+<!--
+    <menuitem name="Menu 1" id="keuangan.menu_1" parent="keuangan.menu_root"/>
+    <menuitem name="Menu 2" id="keuangan.menu_2" parent="keuangan.menu_root"/>
+-->
+    <!-- actions -->
+<!--
+    <menuitem name="List" id="keuangan.menu_1_list" parent="keuangan.menu_1"
+              action="keuangan.action_window"/>
+    <menuitem name="Server to list" id="keuangan" parent="keuangan.menu_2"
+              action="keuangan.action_server"/>
+-->
+  </data>
+</odoo>
