@@ -1,0 +1,53 @@
+<odoo>
+    <data>
+        <!-- cdn.cacat_fisik list view -->
+        <record id="cdn_cacat_fisik_view_tree" model="ir.ui.view">
+            <field name="name">cdn.cacat_fisik.view.list</field>
+            <field name="model">cdn.cacat_fisik</field>
+            <field name="arch" type="xml">
+                <list expand="1">
+                    <!-- Add your fields here -->
+                    <field name="cacat_id" />
+                    <field name="name" />
+                </list>
+            </field>
+        </record>
+        <record id="cdn_cacat_fisik_view_form" model="ir.ui.view">
+            <field name="name">cdn.cacat_fisik.view.form</field>
+            <field name="model">cdn.cacat_fisik</field>
+            <field name="arch" type="xml">
+                <form string="">
+                    <sheet>
+                        <div class="oe_title">
+                            <h1>
+                                <field name="cacat_id"/>
+                            </h1>
+                        </div>
+                        <group>
+                            <group>
+                                <field name="name" />
+                            </group>
+                            <group>
+                            </group>
+                        </group>
+                        <!-- <notebook>
+                        </notebook> -->
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="cdn_cacat_fisik_action" model="ir.actions.act_window">
+            <field name="name">Cacat Fisik</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">cdn.cacat_fisik</field>
+            <field name="view_mode">list,form</field>
+            <field name="context">{ "search_default_group_by_fiscalyear_id": 1}</field>
+        </record>
+
+
+        <menuitem name="Cacat Fisik" id="cacat_fisik_menu_act" parent="master_data_menu_categ"
+            action="cdn_cacat_fisik_action" />
+
+    </data>
+</odoo>

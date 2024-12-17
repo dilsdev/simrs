@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 {
-    'name': "layanan",
+    'name': "RS Keuangan",
 
     'summary': "Short (1 phrase/line) summary of the module's purpose",
 
@@ -30,5 +30,7 @@ Long description of module's purpose
     'demo': [
         'demo/demo.xml',
     ],
+    'sequence':-10,
+    'application': True,
 }
 

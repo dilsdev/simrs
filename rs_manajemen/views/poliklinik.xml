@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <record id="poliklinik_list_view" model="ir.ui.view">
+        <field name="name">poliklinik.list.view</field>
+        <field name="model">cdn.poliklinik</field>
+        <field name="arch" type="xml">
+            <list>
+                <field name="kode_poliklinik"/>
+                <field name="name"/>
+                <field name="registrasi"/>
+                <field name="registrasi_lama"/>
+                <field name="status_aktif"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="poliklinik_form_view" model="ir.ui.view">
+    <field name="name">poliklinik.form.view</field>
+    <field name="model">cdn.poliklinik</field>
+    <field name="arch" type="xml">
+        <form string="Poliklinik Form">
+            <sheet>
+                <group>
+                    <group>
+                        <field name="kode_poliklinik" string="Kode Poliklinik"/>
+                    </group>
+                    <group>
+                        <field name="name" string="Nama Poliklinik"/>
+                    </group>
+                    <group>
+                        <field name="registrasi" string="Registrasi"/>
+                    </group>
+                </group>
+
+                <group>
+                    <group>
+                        <field name="registrasi_lama" string="Registrasi Lama"/>
+                    </group>
+                    <group>
+                        <field name="status_aktif" string="Status Aktif"/>
+                    </group>
+                </group>
+            </sheet>
+        </form>
+    </field>
+</record>
+
+
+
+    <!-- Action -->
+    <record id="cdn_poliklinik_action" model="ir.actions.act_window">
+        <field name="name">Poliklinik</field>
+        <field name="res_model">cdn.poliklinik</field>
+        <field name="view_mode">list,form</field>
+    </record>
+
+    <menuitem id="poliklinik_menu_act" name="Poliklinik" parent="master_data_menu_categ" action="cdn_poliklinik_action"/>
+</odoo>

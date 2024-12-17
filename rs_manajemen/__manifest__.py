@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 {
-    'name': "keuangan",
+    'name': "RS Manajemen",
 
     'summary': "Short (1 phrase/line) summary of the module's purpose",
 
@@ -22,13 +22,31 @@ Long description of module's purpose
 
     # always loaded
     'data': [
-        # 'security/ir.model.access.csv',
-        'views/views.xml',
-        'views/templates.xml',
+        'security/ir.model.access.csv',
+        # 'views/views.xml',
+        # 'views/templates.xml',
+
+
+        # Master Data
+        'views/menu.xml',
+        'views/bangsal.xml',
+        'views/kamar.xml',
+        'views/poliklinik.xml',
+        'views/res_lang.xml',
+        'views/cacat_fisik.xml',
+        'views/perusahaan_pasien.xml',
+        'views/suku.xml',
+        'views/ref_kecamatan.xml',
+        'views/ref_kota.xml',
+        'views/ref_provinsi.xml',
+        'views/ref_desa.xml',
+        'views/penanggung_jawab.xml',
     ],
     # only loaded in demonstration mode
     'demo': [
         'demo/demo.xml',
     ],
+    'sequence': -10,
+    'application': True,
 }
 

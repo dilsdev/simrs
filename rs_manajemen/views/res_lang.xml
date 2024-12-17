@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <record id="res_lang_list_view" model="ir.ui.view">
+        <field name="name">res.lang.list.view</field>
+        <field name="model">res.lang</field>
+        <field name="arch" type="xml">
+            <list>
+                <field name="name"/>
+                <field name="code"/>
+                <field name="active"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="res_lang_form_view" model="ir.ui.view">
+        <field name="name">res.lang.form.view</field>
+        <field name="model">res.lang</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <group>
+                        <field name="name"/>
+                        <field name="code"/>
+                        <field name="active"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_res_lang" model="ir.actions.act_window">
+        <field name="name">Languages</field>
+        <field name="res_model">res.lang</field>
+        <field name="view_mode">list,form</field>
+    </record>
+
+    <menuitem id="menu_res_lang" name="Bahasa" parent="master_data_menu_categ" action="action_res_lang"/>
+</odoo>

@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 {
-    'name': "anjungan",
+    'name': "RS Rekam Medik",
 
     'summary': "Short (1 phrase/line) summary of the module's purpose",
 
@@ -16,6 +16,7 @@ Long description of module's purpose
     # for the full list
     'category': 'Uncategorized',
     'version': '0.1',
+   
 
     # any module necessary for this one to work correctly
     'depends': ['base'],
@@ -30,5 +31,6 @@ Long description of module's purpose
     'demo': [
         'demo/demo.xml',
     ],
+     'sequence': -10,
 }
 

@@ -1,0 +1,62 @@
+<odoo>
+    <data>
+        <!-- cdn.penanggung_jawab list view -->
+        <record id="cdn_penanggung_jawab_view_tree" model="ir.ui.view">
+            <field name="name">cdn.penanggung_jawab.view.list</field>
+            <field name="model">cdn.penanggung_jawab</field>
+            <field name="arch" type="xml">
+                <list expand="1">
+                    <!-- Add your fields here -->
+                    <field name="kode" />
+                    <field name="name" />
+                    <field name="perusahaan_id" />
+                    <field name="attn" />
+                    <field name="status" />
+                </list>
+            </field>
+        </record>
+        <record id="cdn_penanggung_jawab_view_form" model="ir.ui.view">
+            <field name="name">cdn.penanggung_jawab.view.form</field>
+            <field name="model">cdn.penanggung_jawab</field>
+            <field name="arch" type="xml">
+                <form string="">
+                    <sheet>
+                        <div class="oe_title">
+                            <label for='kode'>Kode</label>
+                            <h1>
+                                <field name="kode" />
+                            </h1>
+                        </div>
+                        <group>
+                            <group>
+                                <field name="name" />
+                                <field name="perusahaan_id" />
+                                <field name="alamat" />
+                                <field name="no_telfon" />
+                                <field name="attn" />
+                                <field name="status" />
+                            </group>
+                            <group>
+                            </group>
+                        </group>
+                        <!-- <notebook>
+                        </notebook> -->
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="cdn_penanggung_jawab_action" model="ir.actions.act_window">
+            <field name="name">Penanggung Jawab</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">cdn.penanggung_jawab</field>
+            <field name="view_mode">list,form</field>
+            <field name="context">{ "search_default_group_by_fiscalyear_id": 1}</field>
+        </record>
+
+
+        <menuitem name="Penanggung Jawab" id="penanggung_jawab_menu_act" parent="master_data_menu_categ"
+            action="cdn_penanggung_jawab_action" />
+
+    </data>
+</odoo>

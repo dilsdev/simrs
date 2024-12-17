@@ -1,0 +1,12 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_cdn_kamar,cdn.kamar,model_cdn_kamar,base.group_user,1,1,1,1
+access_cdn_bangsal,cdn.bangsal,model_cdn_bangsal,base.group_user,1,1,1,1
+access_cdn_cacat_fisik,cdn.cacat_fisik,model_cdn_cacat_fisik,base.group_user,1,1,1,1
+access_cdn_perusahaan_pasien,cdn.perusahaan_pasien,model_cdn_perusahaan_pasien,base.group_user,1,1,1,1
+access_cdn_penanggung_jawab,cdn.penanggung_jawab,model_cdn_penanggung_jawab,base.group_user,1,1,1,1
+access_cdn_suku,cdn.suku,model_cdn_suku,base.group_user,1,1,1,1
+access_cdn_poliklinik,cdn.poliklinik,model_cdn_poliklinik,base.group_user,1,1,1,1
+access_cdn_ref_propinsi,access_cdn_ref_propinsi,model_cdn_ref_propinsi,base.group_user,1,1,1,1
+access_cdn_ref_kota,access_cdn_ref_kota,model_cdn_ref_kota,base.group_user,1,1,1,1
+access_cdn_ref_kecamatan,access_cdn_ref_kecamatan,model_cdn_ref_kecamatan,base.group_user,1,1,1,1
+access_cdn_ref_desa,access_cdn_ref_desa,model_cdn_ref_desa,base.group_user,1,1,1,1
