@@ -1,0 +1,47 @@
+<odoo>
+    <data>
+        <!-- cdn.spesialis list view -->
+        <record id="cdn_spesialis_view_tree" model="ir.ui.view">
+            <field name="name">cdn.spesialis.view.list</field>
+            <field name="model">cdn.spesialis</field>
+            <field name="arch" type="xml">
+                <list expand="1">
+                    <!-- Add your fields here -->
+                    <field name="kode" />
+                    <field name="name" />
+                </list>
+            </field>
+        </record>
+        <record id="cdn_spesialis_view_form" model="ir.ui.view">
+            <field name="name">cdn.spesialis.view.form</field>
+            <field name="model">cdn.spesialis</field>
+            <field name="arch" type="xml">
+                <form string="">
+                    <sheet>
+                        <group>
+                            <group>
+                                <field name="kode"/>
+                                <field name="name" />
+                            </group>
+                        </group>
+                        <!-- <notebook>
+                        </notebook> -->
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="cdn_spesialis_action" model="ir.actions.act_window">
+            <field name="name">Spesialis</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">cdn.spesialis</field>
+            <field name="view_mode">list,form</field>
+            <field name="context">{ "search_default_group_by_fiscalyear_id": 1}</field>
+        </record>
+
+
+        <menuitem name="Spesialis" id="spesialis_menu_act" parent="master_data_menu_categ"
+            action="cdn_spesialis_action" />
+
+    </data>
+</odoo>

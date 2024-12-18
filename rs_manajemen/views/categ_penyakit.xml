@@ -1,0 +1,52 @@
+<odoo>
+    <data>
+        <!-- List View -->
+        <record id="cdn_penyakit_view_list" model="ir.ui.view">
+            <field name="name">cdn.penyakit.view.list</field>
+            <field name="model">cdn.penyakit</field>
+            <field name="arch" type="xml">
+                <list string="Daftar Penyakit">
+                    <field name="penyakit_id" string="Kode Penyakit"/>
+                    <field name="name" string="Nama Penyakit"/>
+                    <field name="ciri" string="Ciri Umum"/>
+                </list>
+            </field>
+        </record>
+
+        <!-- Form View -->
+        <record id="cdn_penyakit_view_form" model="ir.ui.view">
+            <field name="name">cdn.penyakit.view.form</field>
+            <field name="model">cdn.penyakit</field>
+            <field name="arch" type="xml">
+                <form string="Form Kategori Penyakit">
+                    <sheet>
+                        <div class="oe_title">
+                            <h1>
+                                <field name="name" string="Nama Penyakit"/>
+                            </h1>
+                        </div>
+                        <group>
+                            <group>
+                                <field name="penyakit_id" string="Kode Penyakit" placeholder="Contoh: 001" />
+                                <field name="ciri" string="Ciri Umum"/>
+                            </group>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <!-- Action -->
+        <record id="cdn_penyakit_action" model="ir.actions.act_window">
+            <field name="name">Kategori Penyakit</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">cdn.penyakit</field>
+            <field name="view_mode">list,form</field>
+            <field name="context">{}</field>
+        </record>
+
+        <!-- Menu Item -->
+        <menuitem name="Kategori Penyakit" id="penyakit_menu_act" parent="master_data_menu_categ"
+            action="cdn_penyakit_action" />
+    </data>
+</odoo>

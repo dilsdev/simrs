@@ -12,3 +12,7 @@ from . import cacat_fisik
 from . import suku
 from . import perusahaan_pasien
 from . import penanggung_jawab
+from . import categ_penyakit
+from . import kategori_perawatan
+from . import aturan_pemakaian
+from . import spesialis

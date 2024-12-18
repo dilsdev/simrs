@@ -10,3 +10,7 @@ access_cdn_ref_propinsi,access_cdn_ref_propinsi,model_cdn_ref_propinsi,base.grou
 access_cdn_ref_kota,access_cdn_ref_kota,model_cdn_ref_kota,base.group_user,1,1,1,1
 access_cdn_ref_kecamatan,access_cdn_ref_kecamatan,model_cdn_ref_kecamatan,base.group_user,1,1,1,1
 access_cdn_ref_desa,access_cdn_ref_desa,model_cdn_ref_desa,base.group_user,1,1,1,1
+access_cdn_penyakit,access_cdn_penyakit,model_cdn_penyakit,base.group_user,1,1,1,1
+access_cdn_kategori_perawatan,access_cdn_kategori_perawatan,model_cdn_kategori_perawatan,base.group_user,1,1,1,1
+access_cdn_aturan_pemakaian,access_cdn_aturan_pemakaian,model_cdn_aturan_pemakaian,base.group_user,1,1,1,1
+access_cdn_spesialis,access_cdn_spesialis,model_cdn_spesialis,base.group_user,1,1,1,1

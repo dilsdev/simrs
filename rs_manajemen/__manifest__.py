@@ -41,6 +41,10 @@ Long description of module's purpose
         'views/ref_provinsi.xml',
         'views/ref_desa.xml',
         'views/penanggung_jawab.xml',
+        'views/categ_penyakit.xml',
+        'views/kategori_perawatan.xml',
+        'views/aturan_pemakaian.xml',
+        'views/spesialis.xml',
     ],
     # only loaded in demonstration mode
     'demo': [
