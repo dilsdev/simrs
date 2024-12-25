@@ -1,0 +1,26 @@
+<odoo>
+    <data>
+
+        <!-- Definisi tampilan produk di halaman custom -->
+        <record id="view_custom_product_list" model="ir.ui.view">
+            <field name="name">custom.product.list</field>
+            <field name="model">product.template</field>
+            <field name="arch" type="xml">
+                <list string="Custom Products">
+                    <field name="name"/>
+                    <field name="default_code"/>
+                    <field name="list_price"/>
+                </list>
+            </field>
+        </record>
+
+        <record id="action_custom_product" model="ir.actions.act_window">
+            <field name="name">Produk</field>
+            <field name="res_model">product.template</field>
+            <field name="view_mode">list,form</field>
+            <field name="view_id" ref="view_custom_product_list"/>
+        </record>
+
+        <menuitem id="menu_custom_product_list" name="Produk" parent="master_data_menu_categ" action="action_custom_product"/>
+    </data>
+</odoo>

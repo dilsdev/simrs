@@ -16,9 +16,8 @@ Long description of module's purpose
     # for the full list
     'category': 'Uncategorized',
     'version': '0.1',
-
-    # any module necessary for this one to work correctly
-    'depends': ['base'],
+    
+    'depends': ['base','product','stock'],
 
     # always loaded
     'data': [
@@ -26,16 +25,16 @@ Long description of module's purpose
         # 'views/views.xml',
         # 'views/templates.xml',
 
-
         # Master Data
         'views/menu.xml',
+        'views/product.xml',
         'views/bangsal.xml',
         'views/kamar.xml',
         'views/poliklinik.xml',
         'views/res_lang.xml',
         'views/cacat_fisik.xml',
         'views/perusahaan_pasien.xml',
-        'views/suku.xml',
+        'views/suku.xml',   
         'views/ref_kecamatan.xml',
         'views/ref_kota.xml',
         'views/ref_provinsi.xml',
@@ -45,6 +44,9 @@ Long description of module's purpose
         'views/kategori_perawatan.xml',
         'views/aturan_pemakaian.xml',
         'views/spesialis.xml',
+        'views/categ_barang.xml',
+        'views/opd_treatment.xml',
+        'views/ipd_treatment.xml',
     ],
     # only loaded in demonstration mode
     'demo': [

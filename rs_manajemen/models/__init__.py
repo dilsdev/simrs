@@ -16,3 +16,5 @@ from . import categ_penyakit
 from . import kategori_perawatan
 from . import aturan_pemakaian
 from . import spesialis
+from . import opd_treatment
+from . import ipd_treatment

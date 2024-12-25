@@ -14,3 +14,5 @@ access_cdn_penyakit,access_cdn_penyakit,model_cdn_penyakit,base.group_user,1,1,1
 access_cdn_kategori_perawatan,access_cdn_kategori_perawatan,model_cdn_kategori_perawatan,base.group_user,1,1,1,1
 access_cdn_aturan_pemakaian,access_cdn_aturan_pemakaian,model_cdn_aturan_pemakaian,base.group_user,1,1,1,1
 access_cdn_spesialis,access_cdn_spesialis,model_cdn_spesialis,base.group_user,1,1,1,1
+access_cdn_opd_treatment,access_cdn_opd_treatment,model_cdn_opd_treatment,base.group_user,1,1,1,1
+access_cdn_ipd_treatment,access_cdn_ipd_treatment,model_cdn_ipd_treatment,base.group_user,1,1,1,1
