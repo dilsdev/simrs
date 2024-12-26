@@ -47,6 +47,9 @@ Long description of module's purpose
         'views/categ_barang.xml',
         'views/opd_treatment.xml',
         'views/ipd_treatment.xml',
+        'views/dokter.xml',
+        'views/petugas.xml',
+        'views/jabatan.xml',
     ],
     # only loaded in demonstration mode
     'demo': [

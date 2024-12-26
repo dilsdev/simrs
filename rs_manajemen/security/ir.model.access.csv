@@ -16,3 +16,5 @@ access_cdn_aturan_pemakaian,access_cdn_aturan_pemakaian,model_cdn_aturan_pemakai
 access_cdn_spesialis,access_cdn_spesialis,model_cdn_spesialis,base.group_user,1,1,1,1
 access_cdn_opd_treatment,access_cdn_opd_treatment,model_cdn_opd_treatment,base.group_user,1,1,1,1
 access_cdn_ipd_treatment,access_cdn_ipd_treatment,model_cdn_ipd_treatment,base.group_user,1,1,1,1
+access_edu_dokter,access_edu_dokter,model_edu_dokter,base.group_user,1,1,1,1
+access_cdn_jabatan,access_cdn_jabatan,model_cdn_jabatan,base.group_user,1,1,1,1

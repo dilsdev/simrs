@@ -2,11 +2,11 @@
 <odoo>
     <data>
         <menuitem id="manajemen_menu_root" name="Manajemen" sequence="10"/>
-        <!-- <menuitem id="presensi_pegawai_menu_categ" name="Presensi Pegawai" sequence="1" parent="manajemen_menu_root"/>  *//Sequence 0 gae Dashboard//*
-        <menuitem id="dokter_menu_categ" name="Dokter" sequence="2" parent="manajemen_menu_root"/>
+        <!-- <menuitem id="presensi_pegawai_menu_categ" name="Presensi Pegawai" sequence="1" parent="manajemen_menu_root"/>  *//Sequence 0 gae Dashboard//* -->
+        <!-- <menuitem id="dokter_menu_categ" name="Dokter" sequence="2" parent="manajemen_menu_root"/> -->
         <menuitem id="petugas_menu_categ" name="Petugas" sequence="3" parent="manajemen_menu_root"/>
-        <menuitem id="kepegawaian_menu_categ" name="Kepegawaian" sequence="4" parent="manajemen_menu_root"/>
-        <menuitem id="akun_pegawai_menu_categ" name="Akun Pegawai" sequence="5" parent="manajemen_menu_root"/> -->
+        <!-- <menuitem id="kepegawaian_menu_categ" name="Kepegawaian" sequence="4" parent="manajemen_menu_root"/> -->
+        <!-- <menuitem id="akun_pegawai_menu_categ" name="Akun Pegawai" sequence="5" parent="manajemen_menu_root"/> -->
         <menuitem id="master_data_menu_categ" name="Master Data" sequence="6" parent="manajemen_menu_root"/>
     </data>
 </odoo>

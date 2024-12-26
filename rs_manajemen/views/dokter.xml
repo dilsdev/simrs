@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <!-- Tampilan Dokter : Inherit modul hr.employee -->
+        <record id="view_employee_tree_inherit" model="ir.ui.view">
+            <field name="name">hr.employee.list.inherit</field>
+            <field name="model">hr.employee</field>
+            <field name="inherit_id" ref="hr.view_employee_tree"/>
+            <field name="arch" type="xml">
+                <field name="department_id" position="before">
+                    <field name="kd_dokter"/>
+                    <field name="spesialis_id"/>
+                    <field name="status"/>
+                    <field name="jns_pegawai"/>
+                </field>
+            </field>
+        </record>
+
+        <record id="view_employee_form_inherit" model="ir.ui.view">
+            <field name="name">hr.employee.form.inherit.dokter</field>
+            <field name="model">hr.employee</field>
+            <field name="inherit_id" ref="hr.view_employee_form"/>
+            <field name="arch" type="xml">
+                <field name="department_id" position="before">
+                    <field name="kd_dokter"/>
+                    <field name="spesialis_id"/>
+                    <field name="status"/>
+                    <field name="jns_pegawai"/>
+                </field>
+
+                <!-- Hide unnecessary fields for dokter -->
+                <xpath expr="//page[@name='personal_information']//group[1]//group[4]" position="attributes">
+                    <attribute name="invisible">1</attribute>
+                </xpath>
+                <xpath expr="//page[@name='personal_information']//group[1]//group[3]" position="attributes">
+                    <attribute name="invisible">1</attribute>
+                </xpath>
+
+                <!-- Add custom button -->
+                <xpath expr="//header" position="inside">
+                    <button name="activate_account"
+                            string="Aktifkan Akun"
+                            type="object" />
+                </xpath>
+
+                <!-- Add additional pages -->
+                <xpath expr="//notebook" position="inside">
+                    <page string="Riwayat Pendidikan Dokter">
+                            <list editable="bottom">
+                                <field name="name"/>
+                                <field name="jenjang"/>
+                                <field name="fakultas"/>
+                                <field name="gelar"/>
+                                <field name="karya_ilmiah"/>
+                                <field name="lulus"/>
+                            </list>
+                    </page>
+                    <page string="Spesialisasi Dokter">
+                        <field name="spesialis_id"/>
+                    </page>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="hr_employee_kanban_inheritance_view" model="ir.ui.view">
+            <field name="name">hr.employee.kanban.inherit.dokter</field>
+            <field name="model">hr.employee</field>
+            <field name="inherit_id" ref="hr.hr_kanban_view_employees"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='job_title']" position="attributes">
+                    <attribute name="t-if">False</attribute>
+                </xpath>
+                <xpath expr="//field[@name='job_title']" position="after">
+                    <span t-if="record.jns_pegawai.raw_value" class="o_kanban_record_subtitle">
+                        <field name="jns_pegawai"/>
+                    </span>
+                </xpath>
+            </field>
+        </record>
+
+        <!-- Define action -->
+        <record id="hr_employee_dokter_open_action" model="ir.actions.act_window">
+            <field name="name">Data Dokter / Karyawan</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">hr.employee</field>
+            <field name="view_mode">list,form</field>
+            <field name="domain">[('jns_pegawai','=','dokter')]</field>
+            <field name="help" type="html">
+                <p class="oe_view_nocontent_create">
+                    Buat Data Dokter Baru
+                </p>
+                <p>
+                    Gunakan menu ini untuk mengelola data dokter karyawan.
+                </p>
+            </field>
+        </record>
+
+        <!-- Define menu item -->
+        <menuitem id="menu_cdn_dokter" 
+                  name="Data Dokter Karyawan" 
+                  parent="petugas_menu_categ" 
+                  action="hr_employee_dokter_open_action"/>
+    </data>
+</odoo>

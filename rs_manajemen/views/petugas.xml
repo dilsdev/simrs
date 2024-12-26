@@ -1,0 +1,105 @@
+<?xml version='1.0' encoding='utf-8'?>
+<odoo>
+    <data>
+        <!-- Tampilan Petugas: Inherit modul hr.employee -->
+        <record id="view_employee_tree_inherit_petugas" model="ir.ui.view">
+            <field name="name">hr.employee.list.inherit.petugas</field>
+            <field name="model">hr.employee</field>
+            <field name="inherit_id" ref="hr.view_employee_tree"/>
+            <field name="arch" type="xml">
+                <field name="department_id" position="before">
+                    <field name="nip"/>
+                    <field name="jabatan_id"/> <!-- Menggunakan jabatan_id -->
+                    <field name="status"/>
+                    <field name="jns_pegawai"/>
+                </field>
+            </field>
+        </record>
+
+        <record id="view_employee_form_inherit_petugas" model="ir.ui.view">
+            <field name="name">hr.employee.form.inherit.petugas</field>
+            <field name="model">hr.employee</field>
+            <field name="inherit_id" ref="hr.view_employee_form"/>
+            <field name="arch" type="xml">
+                <!-- Menambahkan field sebelum department_id -->
+                <field name="department_id" position="before">
+                    <field name="nip"/>
+                    <field name="jabatan_id"/> <!-- Menggunakan jabatan_id -->
+                    <field name="status"/>
+                    <field name="jns_pegawai"/>
+                </field>
+
+                <!-- Menyembunyikan field yang tidak diperlukan -->
+                <xpath expr="//page[@name='personal_information']//group//group" position="attributes">
+                    <attribute name="invisible">1</attribute>
+                </xpath>
+
+                <!-- Mengubah header menjadi 'Data Petugas' -->
+                <xpath expr="//header" position="inside">
+                    <button name="activate_account"
+                            string="Aktifkan Akun"
+                            type="object" />
+                </xpath>
+
+                <!-- Menambahkan Jabatan Petugas dan field lainnya -->
+                <xpath expr="//notebook" position="inside">
+                    <page string="Jabatan Petugas">
+                        <field name="jabatan_id" widget="one2many_list" options="{'no_create': True}"/>
+                    </page>
+                </xpath>
+
+                <!-- Penataan ulang form agar lebih teratur -->
+                <xpath expr="//page[@name='personal_information']//group" position="replace">
+                    <group>
+                        <group>
+                            <field name="nip"/>
+                            <field name="jabatan_id"/> <!-- Menggunakan jabatan_id -->
+                        </group>
+                        <group>
+                            <field name="status"/>
+                            <field name="jns_pegawai"/>
+                            <field name="department_id"/>
+                        </group>
+                    </group>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="hr_employee_kanban_inheritance_view_petugas" model="ir.ui.view">
+            <field name="name">hr.employee.kanban.inherit.petugas</field>
+            <field name="model">hr.employee</field>
+            <field name="inherit_id" ref="hr.hr_kanban_view_employees"/>
+            <field name="arch" type="xml">
+                <!-- Menyembunyikan job_title pada kanban -->
+                <xpath expr="//field[@name='job_title']" position="attributes">
+                    <attribute name="t-if">False</attribute>
+                </xpath>
+                <xpath expr="//field[@name='job_title']" position="after">
+                    <span t-if="record.jns_pegawai.raw_value" class="o_kanban_record_subtitle">
+                        <field name="jns_pegawai"/>
+                    </span>
+                </xpath>
+            </field>
+        </record>
+
+        <!-- Model action untuk membuka data petugas -->
+        <record id="hr_employee_petugas_open_action" model="ir.actions.act_window">
+            <field name="name">Data Petugas / Karyawan</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">hr.employee</field>
+            <field name="view_mode">list,form</field>
+            <field name="domain">[('jns_pegawai','=','petugas')]</field>
+            <field name="help" type="html">
+                <p class="oe_view_nocontent_create">
+                    <!-- Add Text Here -->
+                </p>
+                <p>
+                    <!-- More details about what a user can do with this object will be OK -->
+                </p>
+            </field>
+        </record>
+
+        <!-- Menu untuk membuka data petugas -->
+        <menuitem id="menu_cdn_petugas" name="Data Petugas Karyawan" parent="petugas_menu_categ" action="hr_employee_petugas_open_action" sequence="20"/>
+    </data>
+</odoo>
