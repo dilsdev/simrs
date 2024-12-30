@@ -1,7 +1,7 @@
 <odoo>
     <data>
         <!-- cdn.cacat_fisik list view -->
-        <record id="cdn_cacat_fisik_view_tree" model="ir.ui.view">
+        <record id="cdn_cacat_fisik_view_list" model="ir.ui.view">
             <field name="name">cdn.cacat_fisik.view.list</field>
             <field name="model">cdn.cacat_fisik</field>
             <field name="arch" type="xml">

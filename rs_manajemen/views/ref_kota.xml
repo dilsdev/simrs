@@ -2,8 +2,8 @@
 <odoo>
     <data>
         <!-- list view -->
-        <record id="view_cdn_ref_kota_tree" model="ir.ui.view">
-            <field name="name">cdn_ref_kota_tree</field>
+        <record id="view_cdn_ref_kota_list" model="ir.ui.view">
+            <field name="name">cdn_ref_kota_list</field>
             <field name="model">cdn.ref_kota</field>
             <field name="type">list</field>
             <field name="priority" eval="8"/>

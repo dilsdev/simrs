@@ -18,6 +18,10 @@ from . import aturan_pemakaian
 from . import spesialis
 from . import opd_treatment
 from . import ipd_treatment
+from . import lab_treatment
 from . import dokter
 from . import petugas
 from . import jabatan
+from . import pendidikan_dokter
+from . import pasien
+from . import lab_treatment

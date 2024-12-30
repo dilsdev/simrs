@@ -1,7 +1,7 @@
 <odoo>
     <data>
         <!-- cdn.spesialis list view -->
-        <record id="cdn_spesialis_view_tree" model="ir.ui.view">
+        <record id="cdn_spesialis_view_list" model="ir.ui.view">
             <field name="name">cdn.spesialis.view.list</field>
             <field name="model">cdn.spesialis</field>
             <field name="arch" type="xml">

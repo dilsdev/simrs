@@ -1,0 +1,166 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+        <!-- List View -->
+        <record id="view_pasien_list" model="ir.ui.view">
+            <field name="name">pasien.list</field>
+            <field name="model">cdn.pasien</field>
+            <field name="arch" type="xml">
+                <list>
+                    <field name="no_rkm_medis"/>
+                    <field name="nm_pasien"/>
+                    <field name="jk"/>
+                    <field name="tgl_lahir"/>
+                    <field name="alamat"/>
+                    <field name="no_tlp"/>
+                </list>
+            </field>
+        </record>
+
+        <!-- Form View -->
+        <record id="view_pasien_form" model="ir.ui.view">
+            <field name="name">pasien.form</field>
+            <field name="model">cdn.pasien</field>
+            <field name="arch" type="xml">
+                <form>
+                    <header>
+                        <button name="action_activate_account"
+                                string="Aktifkan Akun"
+                                type="object"
+                                class="oe_highlight"/>
+                    </header>
+                    <sheet>
+                        <div class="oe_title">
+                            <label for="nm_pasien" class="oe_edit_only"/>
+                            <h1>
+                                <field name="nm_pasien" placeholder="Nama Pasien"/>
+                            </h1>
+                        </div>
+                        <group>
+                            <group>
+                                <field name="no_rkm_medis" readonly="1"/>
+                                <field name="no_ktp"/>
+                                <field name="jk"/>
+                                <field name="tgl_lahir"/>
+                                <field name="tmp_lahir"/>
+                                <field name="gol_darah"/>
+                            </group>
+                            <group>
+                                <field name="agama"/>
+                                <field name="stts_nikah"/>
+                                <field name="umur"/>
+                                <field name="pnd"/>
+                                <field name="no_tlp"/>
+                                <field name="email"/>
+                            </group>
+                        </group>
+                        <notebook>
+                            <page string="Alamat dan Keluarga">
+                                <group>
+                                    <group>
+                                        <field name="alamat"/>
+                                        <field name="keluarga"/>
+                                        <field name="namakeluarga"/>
+                                    </group>
+                                    <group>
+                                        <field name="pekerjaan"/>
+                                        <field name="kd_pj"/>
+                                        <field name="no_peserta"/>
+                                    </group>
+                                </group>
+                            </page>
+                            <page string="Penjamin dan Perusahaan">
+                                <group>
+                                    <group>
+                                        <field name="pekerjaanpj"/>
+                                        <field name="alamatpj"/>
+                                        <field name="kelurahanpj"/>
+                                        <field name="kecamatanpj"/>
+                                    </group>
+                                    <group>
+                                        <field name="kabupatenpj"/>
+                                        <field name="propinsipj"/>
+                                        <field name="perusahaan_pasien"/>
+                                    </group>
+                                </group>
+                            </page>
+                            <page string="Informasi Tambahan">
+                                <group>
+                                    <group>
+                                        <field name="suku_bangsa"/>
+                                        <field name="bahasa_pasien"/>
+                                        <field name="cacat_fisik"/>
+                                    </group>
+                                    <group>
+                                        <field name="nip"/>
+                                        <field name="kd_prop"/>
+                                        <field name="kd_kec"/>
+                                        <field name="kd_kab"/>
+                                    </group>
+                                </group>
+                            </page>
+                        </notebook>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <!-- Kanban View -->
+        <record id="view_pasien_kanban" model="ir.ui.view">
+            <field name="name">pasien.kanban</field>
+            <field name="model">cdn.pasien</field>
+            <field name="arch" type="xml">
+                <kanban>
+                    <field name="nm_pasien"/>
+                    <field name="jk"/>
+                    <field name="tgl_lahir"/>
+                    <field name="no_tlp"/>
+                    <templates>
+                        <t t-name="kanban-box">
+                            <div class="oe_kanban_global_click">
+                                <div class="o_kanban_image">
+                                    <img t-att-src="kanban_image('res.partner', 'image_128', record.partner_id.raw_value)" class="img-circle"/>
+                                </div>
+                                <div class="oe_kanban_details">
+                                    <strong>
+                                        <field name="nm_pasien"/>
+                                    </strong>
+                                    <div>
+                                        <span><field name="jk"/></span> - 
+                                        <span><field name="tgl_lahir"/></span>
+                                    </div>
+                                    <div>
+                                        <span><field name="no_tlp"/></span>
+                                    </div>
+                                </div>
+                            </div>
+                        </t>
+                    </templates>
+                </kanban>
+            </field>
+        </record>
+
+        <!-- Action -->
+        <record id="action_pasien" model="ir.actions.act_window">
+            <field name="name">Data Pasien</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">cdn.pasien</field>
+            <field name="view_mode">kanban,list,form</field>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">
+                    Buat Data Pasien Baru
+                </p>
+                <p>
+                    Gunakan menu ini untuk mengelola data pasien.
+                </p>
+            </field>
+        </record>
+
+        <!-- Menu -->
+        <menuitem id="menu_pasien" 
+                  name="Data Pasien" 
+                  parent="petugas_menu_categ" 
+                  action="action_pasien"
+                  sequence="10"/>
+    </data>
+</odoo>

@@ -2,8 +2,8 @@
 <odoo>
     <data>
         <!-- list view -->
-        <record id="view_cdn_ref_propinsi_tree" model="ir.ui.view">
-            <field name="name">cdn_ref_propinsi_tree</field>
+        <record id="view_cdn_ref_propinsi_list" model="ir.ui.view">
+            <field name="name">cdn_ref_propinsi_list</field>
             <field name="model">cdn.ref_propinsi</field>
             <field name="type">list</field>
             <field name="priority" eval="8"/>

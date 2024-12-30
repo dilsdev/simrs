@@ -1,11 +1,19 @@
 from odoo import api, fields, models
 from odoo.exceptions import UserError
 
-class HrEmployee(models.Model):
-    _inherit = 'hr.employee'
+class Petugas(models.Model):
+    _name = 'cdn.petugas'
+    _description = 'Data Petugas Rumah Sakit'
+    _inherits = {'hr.employee': 'employee_id'}
+
+    employee_id = fields.Many2one(
+        'hr.employee', 
+        required=True, 
+        ondelete='cascade', 
+        string='Employee'
+    )
 
     # Informasi Pegawai
-    kd_dokter = fields.Char('Kode Dokter', required=True)
     nip = fields.Char(string="NIP")
     jk = fields.Selection([('L', 'Laki-laki'), ('P', 'Perempuan')], string='Jenis Kelamin')
     tmp_lahir = fields.Char('Tempat Lahir')
@@ -14,9 +22,15 @@ class HrEmployee(models.Model):
     agama = fields.Char('Agama')
     almt_tgl = fields.Char('Alamat dan Tanggal')
     no_telp = fields.Char('Nomor Telepon')
-    stts_nikah = fields.Selection([('BELUM MENIKAH', 'Belum Menikah'), ('MENIKAH', 'Menikah'), ('JANDA', 'Janda'), ('DUDHA', 'Duda'), ('JOMBLO', 'Jomblo')], string='Status Pernikahan')
+    stts_nikah = fields.Selection([
+        ('BELUM MENIKAH', 'Belum Menikah'),
+        ('MENIKAH', 'Menikah'),
+        ('JANDA', 'Janda'),
+        ('DUDHA', 'Duda'),
+        ('JOMBLO', 'Jomblo')
+    ], string='Status Pernikahan')
     status = fields.Selection([('0', 'Non-Aktif'), ('1', 'Aktif')], string='Status', default='1')
-    jabatan_id = fields.Many2one('cnd.jabatan', string="Jabatan", help="Jabatan Petugas")
+    jabatan_id = fields.Many2one('cdn.jabatan', string="Jabatan", help="Jabatan Petugas")
 
     # Jenis Pegawai (Employee Type)
     jns_pegawai = fields.Selection([
@@ -30,67 +44,44 @@ class HrEmployee(models.Model):
         ('manajer_rumah_sakit', 'Manajer Rumah Sakit'),
         ('staf_keuangan_akuntansi', 'Staf Keuangan dan Akuntansi'),
         ('staf_it', 'Staf IT'),
-    ], string='Jenis Pegawai', required=True)
+    ], string=' Jenis Pegawai', required=True)
 
-    
-    # Menambahkan password dan role jika diperlukan
     def activate_account(self):
-        if not self.work_email:
+        self.ensure_one()
+        if not self.employee_id.work_email:
             raise UserError("Email tidak ditemukan di data karyawan.")
-        if not self.kd_dokter:
-            raise UserError("Kode Dokter belum diisi.")
         
-        # Cari user berdasarkan email dari work_email
-        user = self.env['res.users'].search([('login', '=', self.work_email)], limit=1)
+        user = self.env['res.users'].search([('login', '=', self.employee_id.work_email)], limit=1)
         
         if not user:
-            raise UserError(f"User dengan email {self.work_email} tidak ditemukan.")
+            raise UserError(f"User  dengan email {self.employee_id.work_email} tidak ditemukan.")
         
         # Menentukan group yang sesuai berdasarkan jenis pegawai
-        groups_to_add = []
-        
-        if self.jns_pegawai == 'dokter':
-            groups_to_add.append(self.env.ref('rs_dokter.group_dokter_staff'))
-        elif self.jns_pegawai == 'perawat':
-            groups_to_add.append(self.env.ref('rs_perawat.group_perawat_staff'))
-        elif self.jns_pegawai == 'apoteker':
-            groups_to_add.append(self.env.ref('rs_apoteker.group_apoteker_staff'))
-        elif self.jns_pegawai == 'tenaga_medis_lainnya':
-            groups_to_add.append(self.env.ref('rs_tenaga_medis_lainnya.group_tenaga_medis_lainnya'))
-        elif self.jns_pegawai == 'administrasi_rumah_sakit':
-            groups_to_add.append(self.env.ref('rs_administrasi_rumah_sakit.group_administrasi_staff'))
-        elif self.jns_pegawai == 'petugas_kebersihan_keamanan':
-            groups_to_add.append(self.env.ref('rs_petugas_kebersihan_keamanan.group_petugas_kebersihan_keamanan'))
-        elif self.jns_pegawai == 'teknisi_medis':
-            groups_to_add.append(self.env.ref('rs_teknisi_medis.group_teknisi_medis'))
-        elif self.jns_pegawai == 'manajer_rumah_sakit':
-            groups_to_add.append(self.env.ref('rs_manajer_rumah_sakit.group_manajer_rumah_sakit'))
-        elif self.jns_pegawai == 'staf_keuangan_akuntansi':
-            groups_to_add.append(self.env.ref('rs_staf_keuangan_akuntansi.group_staf_keuangan_akuntansi'))
-        elif self.jns_pegawai == 'staf_it':
-            groups_to_add.append(self.env.ref('rs_staf_it.group_staf_it'))
-        
-        if not groups_to_add:
+        group_mapping = {
+            'dokter': 'rs_dokter.group_dokter_staff',
+            'perawat': 'rs_perawat.group_perawat_staff',
+            'apoteker': 'rs_apoteker.group_apoteker_staff',
+            'tenaga_medis_lainnya': 'rs_tenaga_medis_lainnya.group_tenaga_medis_lainnya',
+            'administrasi_rumah_sakit': 'rs_administrasi_rumah_sakit.group_administrasi_staff',
+            'petugas_kebersihan_keamanan': 'rs_petugas_kebersihan_keamanan.group_petugas_kebersihan_keamanan',
+            'teknisi_medis': 'rs_teknisi_medis.group_teknisi_medis',
+            'manajer_rumah_sakit': 'rs_manajer_rumah_sakit.group_manajer_rumah_sakit',
+            'staf_keuangan_akuntansi': 'rs_staf_keuangan_akuntansi.group_staf_keuangan_akuntansi',
+            'staf_it': 'rs_staf_it.group_staf_it'
+        }
+
+        if self.jns_pegawai not in group_mapping:
             raise UserError("Jenis pegawai tidak terdaftar untuk penambahan group.")
-        
-        # Menambahkan semua grup yang diperlukan ke user
-        for group in groups_to_add:
-            if group not in user.groups_id:
-                user.groups_id = [(4, group.id)]
 
-        # Atur ulang password user dengan format kd_dokter
-        new_password = f"{self.kd_dokter[:6]}"  # Gunakan 6 digit pertama kode dokter
-        if len(new_password) < 6:
-            raise UserError("Kode dokter harus memiliki minimal 6 karakter.")
-        user.write({'password': new_password})
+        group = self.env.ref(group_mapping[self.jns_pegawai])
+        if group not in user.groups_id:
+            user.write({'groups_id': [(4, group.id)]})
 
-        # Arahkan ke form user yang baru saja diperbarui
         return {
             'type': 'ir.actions.act_window',
-            'name': 'User',
+            'name': 'User ',
             'res_model': 'res.users',
             'res_id': user.id,
             'view_mode': 'form',
-            'view_type': 'form',
             'target': 'current',
         }

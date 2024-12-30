@@ -17,7 +17,7 @@ Long description of module's purpose
     'category': 'Uncategorized',
     'version': '0.1',
     
-    'depends': ['base','product','stock'],
+    'depends': ['base','product','stock','account','hr'],
 
     # always loaded
     'data': [
@@ -50,6 +50,9 @@ Long description of module's purpose
         'views/dokter.xml',
         'views/petugas.xml',
         'views/jabatan.xml',
+        'views/pendidikan_dokter.xml',
+        'views/pasien.xml',
+        'views/lab_treatment.xml',
     ],
     # only loaded in demonstration mode
     'demo': [
