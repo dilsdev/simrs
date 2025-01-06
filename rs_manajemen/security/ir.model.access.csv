@@ -19,7 +19,6 @@ access_cdn_jabatan,access_cdn_jabatan,model_cdn_jabatan,base.group_user,1,1,1,1
 access_cdn_pendidikan_dokter,access_cdn_pendidikan_dokter,model_cdn_pendidikan_dokter,base.group_user,1,1,1,1
 access_cdn_doctor,access_cdn_doctor,model_cdn_doctor,base.group_user,1,1,1,1
 access_cdn_petugas,access_cdn_petugas,model_cdn_petugas,base.group_user,1,1,1,1
-access_cdn_pasien,access_cdn_pasien,model_cdn_pasien,base.group_user,1,1,1,1
 access_cdn_lab_treatment,access_cdn_lab_treatment,model_cdn_lab_treatment,base.group_user,1,1,1,1
 access_cdn_lab_treatment_detail,access_cdn_lab_treatment_detail,model_cdn_lab_treatment_detail,base.group_user,1,1,1,1
 access_cdn_radiologi_treatment,access_cdn_radiologi_treatment,model_cdn_radiologi_treatment,base.group_user,1,1,1,1

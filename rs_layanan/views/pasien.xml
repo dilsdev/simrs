@@ -216,7 +216,7 @@
         <!-- Menu -->
         <menuitem id="menu_pasien"
             name="Data Pasien"
-            parent="manajemen_menu_root"
+            parent="layanan_menu_root"
             action="action_pasien"
             sequence="10" />
     </data>

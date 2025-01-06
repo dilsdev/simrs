@@ -22,6 +22,5 @@ from . import dokter
 from . import petugas
 from . import jabatan
 from . import pendidikan_dokter
-from . import pasien
 from . import lab_treatment
 from . import radiologi_treatment

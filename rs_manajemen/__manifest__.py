@@ -50,7 +50,6 @@ Long description of module's purpose
         'views/petugas.xml',
         'views/jabatan.xml',
         'views/pendidikan_dokter.xml',
-        'views/pasien.xml',
         'views/lab_treatment.xml',
         'views/radiologi_treatment.xml',
     ],
