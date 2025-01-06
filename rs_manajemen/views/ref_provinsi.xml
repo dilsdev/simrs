@@ -83,6 +83,7 @@
             </field>
         </record>
 
-        <menuitem id="menu_cdn_ref_propinsi" name="Provinsi" parent="master_data_menu_categ" action="action_cdn_ref_propinsi" sequence="10"/>
+        <menuitem id="menu_cdn_ref_propinsi" name="Provinsi" parent="data_wilayah_categ"
+            action="action_cdn_ref_propinsi" sequence="1" />
     </data>
 </odoo>

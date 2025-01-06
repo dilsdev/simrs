@@ -91,6 +91,7 @@
             </field>
         </record>
 
-        <menuitem id="menu_cdn_ref_kota" name="Kota" parent="master_data_menu_categ" action="action_cdn_ref_kota" sequence="20"/>
+        <menuitem id="menu_cdn_ref_kota" name="Kota" parent="data_wilayah_categ"
+            action="action_cdn_ref_kota" sequence="2" />
     </data>
 </odoo>

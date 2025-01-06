@@ -1,0 +1,73 @@
+<odoo>
+    <record id="view_radiologi_treatment_form" model="ir.ui.view">
+        <field name="name">radiologi.treatment.form</field>
+        <field name="model">cdn.radiologi.treatment</field>
+        <field name="arch" type="xml">
+            <form string="Jenis Perawatan Radiologi">
+                <header>
+                    <button name="action_confirm" type="object" string="Confirm"
+                        class="oe_highlight" invisible="state != 'draft'" />
+                    <button name="action_set_to_draft" type="object" string="Set to Draft"
+                        class="btn-secondary" invisible="state != 'confirmed'" />
+                    <field name="state" widget="statusbar" statusbar_visible="draft,confirmed" />
+                </header>
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="code" readonly="1" />
+                            <field name="name" />
+                            <field name="category_id" />
+                            <field name="penjab_id" />
+                            <field name="bangsal_id" />
+                            <field name="kelas_kamar" />
+                        </group>
+                        <group>
+                            <field name="doctor_fee" />
+                            <field name="nurse_fee" />
+                            <field name="room_fee" readonly="1" />
+                            <field name="total_fee" readonly="1" />
+                            <field name="product_id" readonly="1" />
+                            <field name="tax_id" />
+                        </group>
+                    </group>
+                    <group class='oe_subtotal_footer'>
+                        <group>
+                            <field name="total_fee" string="Jumlah Sebelum Pajak" readonly="1"
+                                widget="monetary" class="oe_subtotal_footer_separator" />
+                            <field name="tax_id" string="Pajak" widget="many2one" readonly="1" />
+                            <field name="total_with_tax" string="Total dengan Pajak" readonly="1"
+                                widget="monetary" class="oe_subtotal_footer_separator"
+                                style="font-weight: bold;" />
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_radiologi_treatment_list" model="ir.ui.view">
+        <field name="name">radiologi.treatment.list</field>
+        <field name="model">cdn.radiologi.treatment</field>
+        <field name="arch" type="xml">
+            <list string="Jenis Perawatan Radiologi">
+                <field name="code" />
+                <field name="name" />
+                <field name="category_id" />
+                <field name="doctor_fee" />
+                <field name="nurse_fee" />
+                <field name="room_fee" />
+                <field name="total_with_tax" />
+                <field name="state" />
+            </list>
+        </field>
+    </record>
+
+    <record id="action_radiologi_treatment" model="ir.actions.act_window">
+        <field name="name">Jenis Perawatan Radiologi</field>
+        <field name="res_model">cdn.radiologi.treatment</field>
+        <field name="view_mode">list,form</field>
+    </record>
+
+    <menuitem id="menu_radiologi_treatment" parent="data_pasien_categ"
+        name="Perawatan Radiologi" action="action_radiologi_treatment" sequence="4" />
+</odoo>

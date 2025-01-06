@@ -41,7 +41,6 @@ Long description of module's purpose
         'views/ref_desa.xml',
         'views/penanggung_jawab.xml',
         'views/categ_penyakit.xml',
-        'views/kategori_perawatan.xml',
         'views/aturan_pemakaian.xml',
         'views/spesialis.xml',
         'views/categ_barang.xml',
@@ -53,6 +52,7 @@ Long description of module's purpose
         'views/pendidikan_dokter.xml',
         'views/pasien.xml',
         'views/lab_treatment.xml',
+        'views/radiologi_treatment.xml',
     ],
     # only loaded in demonstration mode
     'demo': [

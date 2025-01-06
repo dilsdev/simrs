@@ -45,9 +45,8 @@
             <field name="context">{ "search_default_group_by_fiscalyear_id": 1}</field>
         </record>
 
-
-        <menuitem name="Suku Bangsa" id="suku_menu_act" parent="master_data_menu_categ"
-            action="cdn_suku_action" />
+        <menuitem name="Suku Bangsa" id="suku_menu_act" parent="data_umum_categ"
+            action="cdn_suku_action" sequence="2" />
 
     </data>
 </odoo>

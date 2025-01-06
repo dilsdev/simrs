@@ -54,5 +54,6 @@
         <field name="view_mode">list,form</field>
     </record>
 
-    <menuitem id="poliklinik_menu_act" name="Poliklinik" parent="master_data_menu_categ" action="cdn_poliklinik_action"/>
+    <menuitem id="poliklinik_menu_act" name="Poliklinik" parent="data_fasilitas_categ"
+        action="cdn_poliklinik_action" sequence="3" />
 </odoo>

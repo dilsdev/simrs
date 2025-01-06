@@ -53,8 +53,8 @@
         </record>
 
 
-        <menuitem name="Pendidikan dokter" id="perusahaan_menu_act" parent="master_data_menu_categ"
-            action="cdn_pendidikan_dokter_action" />
+        <menuitem name="Pendidikan dokter" id="perusahaan_menu_act" parent="data_tenaga_medis_categ"
+            action="cdn_pendidikan_dokter_action" sequence="2"/>
 
     </data>
 </odoo>

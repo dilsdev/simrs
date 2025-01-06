@@ -55,8 +55,8 @@
         </record>
 
 
-        <menuitem name="Penanggung Jawab" id="penanggung_jawab_menu_act" parent="master_data_menu_categ"
-            action="cdn_penanggung_jawab_action" />
+        <menuitem name="Penanggung Jawab" id="penanggung_jawab_menu_act" parent="data_pasien_categ"
+            action="cdn_penanggung_jawab_action" sequence="6"/>
 
     </data>
 </odoo>

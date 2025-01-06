@@ -21,6 +21,7 @@
             <field name="view_id" ref="view_custom_product_list"/>
         </record>
 
-        <menuitem id="menu_custom_product_list" name="Produk" parent="master_data_menu_categ" action="action_custom_product"/>
+        <menuitem id="menu_custom_product_list" name="Produk" parent="data_medis_categ"
+            action="action_custom_product" sequence="1"/>
     </data>
 </odoo>

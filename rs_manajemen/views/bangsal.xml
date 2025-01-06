@@ -49,8 +49,8 @@
         </record>
 
 
-        <menuitem name="Bangsal" id="bangsal_menu_act" parent="master_data_menu_categ"
-            action="cdn_bangsal_action" />
+        <menuitem name="Bangsal" id="bangsal_menu_act" parent="data_fasilitas_categ"
+            action="cdn_bangsal_action" sequence="1" />
 
     </data>
 </odoo>

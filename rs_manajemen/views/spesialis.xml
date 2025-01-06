@@ -40,8 +40,8 @@
         </record>
 
 
-        <menuitem name="Spesialis" id="spesialis_menu_act" parent="master_data_menu_categ"
-            action="cdn_spesialis_action" />
+        <menuitem name="Spesialis" id="spesialis_menu_act" parent="data_tenaga_medis_categ"
+            action="cdn_spesialis_action" sequence="1"/>
 
     </data>
 </odoo>

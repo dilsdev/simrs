@@ -83,6 +83,7 @@
             </field>
         </record>
 
-        <menuitem id="menu_cdn_ref_desa" name="Desa/Kelurahan" parent="master_data_menu_categ" action="action_cdn_ref_desa" sequence="30"/>
+        <menuitem id="menu_cdn_ref_desa" name="Desa/Kelurahan" parent="data_wilayah_categ"
+            action="action_cdn_ref_desa" sequence="4" />
     </data>
 </odoo>

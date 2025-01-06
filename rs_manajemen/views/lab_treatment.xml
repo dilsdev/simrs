@@ -3,49 +3,69 @@
         <field name="name">lab.treatment.form</field>
         <field name="model">cdn.lab_treatment</field>
         <field name="arch" type="xml">
-            <form string="Jenis Perawatan Laboratorium">
+            <form string="Lab Treatment">
+                <header>
+                    <button name="action_confirm" type="object" string="Confirm"
+                        class="oe_highlight" invisible="state != 'draft'" />
+                    <button name="action_set_to_draft" type="object" string="Set to Draft"
+                        class="btn-secondary" invisible="state != 'confirmed'" />
+                    <field name="state" widget="statusbar" statusbar_visible="draft,confirmed" />
+                </header>
+
                 <sheet>
-                    <group>
+                    <group string="Informasi Umum">
                         <group>
-                            <field name="code" readonly="1"/>
-                            <field name="name"/>
-                            <field name="category_id"/>
-                            <field name="penjab_id"/>
-                            <field name="kelas_kamar"/>
+                            <field name="code" readonly="1" string="Kode" />
+                            <field name="name" string="Nama" />
+                            <field name="category_id" string="Kategori" />
+                            <field name="penjab_id" string="Penanggung Jawab" />
+                            <field name="bangsal_id" string="Bangsal" />
                         </group>
                         <group>
-                            <field name="doctor_fee"/>
-                            <field name="nurse_fee"/>
-                            <field name="total_fee" readonly="1"/>
-                            <field name="product_id" readonly="1"/>
-                            <field name="tax_id" options="{'no_create': True}" readonly="1"/>
-                            <field name="status"/>
+                            <field name="kelas_kamar" string="Kelas Kamar" />
+                            <field name="doctor_fee" string="Biaya Dokter" />
+                            <field name="nurse_fee" string="Biaya Perawat" />
+                            <field name="tax_id" string="Jenis Pajak" widget="many2one"
+                                domain="[('type_tax_use', '=', 'sale')]" />
+                            <field name="total_fee" readonly="1" string="Total Biaya" />
                         </group>
                     </group>
 
                     <notebook>
                         <page string="Detail Pemeriksaan">
-                            <field name="detail_pemeriksaan_ids">
-                                <form>
+                            <field name="detail_ids">
+                                <list string="Detail Pemeriksaan">
+                                    <field name="nama_pemeriksaan" string="Nama Pemeriksaan" />
+                                    <field name="satuan" string="Satuan" />
+                                    <field name="nrl_dewasa" string="NRL Dewasa" />
+                                    <field name="nrl_anak" string="NRL Anak" />
+                                    <field name="nrp_dewasa" string="NRP Dewasa" />
+                                    <field name="nrp_anak" string="NRP Anak" />
+                                </list>
+                                <form string="Detail Pemeriksaan">
                                     <group>
-                                        <field name="nama_pemeriksaan"/>
-                                        <field name="satuan"/>
-                                        <field name="nrl_dewasa"/>
-                                        <field name="nrl_anak"/>
-                                        <field name="nrp_dewasa"/>
-                                        <field name="nrp_anak"/>
+                                        <field name="nama_pemeriksaan" string="Nama Pemeriksaan" />
+                                        <field name="satuan" string="Satuan" />
+                                        <field name="nrl_dewasa" string="NRL Dewasa" />
+                                        <field name="nrl_anak" string="NRL Anak" />
+                                        <field name="nrp_dewasa" string="NRP Dewasa" />
+                                        <field name="nrp_anak" string="NRP Anak" />
                                     </group>
                                 </form>
                             </field>
                         </page>
                     </notebook>
 
-                    <group class='oe_subtotal_footer'>
+                    <group string="Rincian Pajak" class="oe_subtotal_footer">
                         <group>
-                            <!-- Use field tag for dynamic values -->
-                            <field name="total_fee" string="Jumlah Sebelum Pajak" readonly="1" widget="monetary" class="oe_subtotal_footer_separator"/>
-                            <field name="tax_id" string="Pajak" widget="many2one" readonly="1"/>
-                            <field name="total_with_tax" string="Total dengan Pajak" readonly="1" widget="monetary" class="oe_subtotal_footer_separator" style="font-weight: bold;"/>
+                            <field name="total_fee" string="Jumlah Sebelum Pajak" readonly="1"
+                                widget="monetary" class="oe_subtotal_footer_separator" />
+                        </group>
+                        <group>
+                            <field name="tax_id" string="Pajak" widget="many2one" readonly="1" />
+                            <field name="total_with_tax" string="Total dengan Pajak" readonly="1"
+                                widget="monetary" class="oe_subtotal_footer_separator"
+                                style="font-weight: bold;" />
                         </group>
                     </group>
                 </sheet>
@@ -58,12 +78,12 @@
         <field name="model">cdn.lab_treatment</field>
         <field name="arch" type="xml">
             <list string="Jenis Perawatan Laboratorium">
-                <field name="code"/>
-                <field name="name"/>
-                <field name="category_id"/>
-                <field name="doctor_fee"/>
-                <field name="nurse_fee"/>
-                <field name="status"/>
+                <field name="code" string="Kode" />
+                <field name="name" string="Nama" />
+                <field name="category_id" string="Kategori" />
+                <field name="doctor_fee" string="Biaya Dokter" />
+                <field name="nurse_fee" string="Biaya Perawat" />
+                <field name="state" string="Status" />
             </list>
         </field>
     </record>
@@ -74,5 +94,6 @@
         <field name="view_mode">list,form</field>
     </record>
 
-    <menuitem id="menu_lab_treatment" parent="master_data_menu_categ" name="Perawatan Laboratorium" action="action_lab_treatment" sequence="30"/>
+    <menuitem id="menu_lab_treatment" parent="data_pasien_categ" name="Perawatan Laboratorium"
+        action="action_lab_treatment" sequence="3" />
 </odoo>

@@ -46,8 +46,8 @@
         </record>
 
 
-        <menuitem name="Cacat Fisik" id="cacat_fisik_menu_act" parent="master_data_menu_categ"
-            action="cdn_cacat_fisik_action" />
+        <menuitem name="Cacat Fisik" id="cacat_fisik_menu_act" parent="data_pasien_categ"
+            action="cdn_cacat_fisik_action" sequence="5"/>
 
     </data>
 </odoo>

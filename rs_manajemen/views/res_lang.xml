@@ -34,5 +34,5 @@
         <field name="view_mode">list,form</field>
     </record>
 
-    <menuitem id="menu_res_lang" name="Bahasa" parent="master_data_menu_categ" action="action_res_lang"/>
+    <menuitem id="menu_res_lang" name="Bahasa" parent="data_umum_categ" action="action_res_lang" sequence="1"/>
 </odoo>

@@ -89,6 +89,7 @@
         </record>
 
         <!-- menu item -->
-        <menuitem id="menu_cdn_ref_kecamatan" name="Kecamatan" parent="master_data_menu_categ" action="action_cdn_ref_kecamatan" sequence="20"/>
+        <menuitem id="menu_cdn_ref_kecamatan" name="Kecamatan" parent="data_wilayah_categ"
+            action="action_cdn_ref_kecamatan" sequence="3" />
     </data>
 </odoo>

@@ -1,19 +1,20 @@
 from odoo import models, fields, api
 from datetime import datetime
+
 class Pasien(models.Model):
     _name = 'cdn.pasien'
     _description = 'Data Pasien'
     _inherits = {'res.partner': 'partner_id'}
 
     no_rkm_medis = fields.Char(string='No Rekam Medis', required=True, copy=False, readonly=True, default='NRM/20XX/XXX')
-    nm_pasien = fields.Char(string="Nama Pasien")
-    partner_id = fields.Many2one('res.partner', string="Contact", required=True, ondelete="cascade")
-    no_ktp = fields.Char(string="Nomor KTP")
-    jk = fields.Selection([('L', 'Laki-laki'), ('P', 'Perempuan')], string="Jenis Kelamin")
-    tmp_lahir = fields.Char(string="Tempat Lahir")
-    tgl_lahir = fields.Date(string="Tanggal Lahir")
-    nm_ibu = fields.Char(string="Nama Ibu", required=True)
-    alamat = fields.Text(string="Alamat")
+    # name = fields.Char(string="Nama Pasien", required=True)  # Nama pasien harus required
+    partner_id = fields.Many2one('res.partner', string="Contact", required=False, ondelete="cascade")
+    no_ktp = fields.Char(string="Nomor KTP", required=True)  # KTP penting untuk identifikasi
+    jk = fields.Selection([('L', 'Laki-laki'), ('P', 'Perempuan')], string="Jenis Kelamin", required=True)  # Jenis kelamin penting untuk medis
+    tmp_lahir = fields.Char(string="Tempat Lahir", required=True)  # Tempat lahir penting untuk identifikasi
+    tgl_lahir = fields.Date(string="Tanggal Lahir", required=True)  # Tanggal lahir penting untuk medis
+    nm_ibu = fields.Char(string="Nama Ibu", required=True)  # Tetap required untuk verifikasi
+    alamat = fields.Text(string="Alamat", required=True)  # Alamat penting untuk kunjungan/kontak
     gol_darah = fields.Selection([('A', 'A'), ('B', 'B'), ('O', 'O'), ('AB', 'AB'), ('-', '-')], string="Golongan Darah")
     pekerjaan = fields.Char(string="Pekerjaan")
     stts_nikah = fields.Selection([
@@ -24,8 +25,8 @@ class Pasien(models.Model):
         ('JOMBLO', 'Jomblo')
     ], string="Status Pernikahan")
     agama = fields.Char(string="Agama")
-    tgl_daftar = fields.Date(string="Tanggal Daftar")
-    no_tlp = fields.Char(string="Nomor Telepon")
+    tgl_daftar = fields.Date(string="Tanggal Daftar", required=True)  # Penting untuk administrasi
+    # no_tlp = fields.Char(string="Nomor Telepon", required=True)  # Penting untuk kontak
     umur = fields.Char(string="Umur", required=True)
     pnd = fields.Selection([
         ('TS', 'Tidak Sekolah'),
@@ -42,7 +43,7 @@ class Pasien(models.Model):
         ('S2', 'Sarjana 2'),
         ('S3', 'Sarjana 3'),
         ('-', 'Tidak Diketahui')
-    ], string="Pendidikan", required=True)
+    ], string="Pendidikan")
     keluarga = fields.Selection([
         ('AYAH', 'Ayah'),
         ('IBU', 'Ibu'),
@@ -51,32 +52,30 @@ class Pasien(models.Model):
         ('SAUDARA', 'Saudara'),
         ('ANAK', 'Anak')
     ], string="Hubungan Keluarga")
-    namakeluarga = fields.Char(string="Nama Keluarga", required=True)
-    kd_pj = fields.Char(string="Kode Penjamin", required=True)
+    namakeluarga = fields.Char(string="Nama Keluarga")  # Tidak semua pasien punya keluarga dekat
+    kd_pj = fields.Many2one('cdn.penanggung_jawab',string="Kode Penjamin")  # Bisa bayar sendiri
     no_peserta = fields.Char(string="Nomor Peserta")
     kd_kel = fields.Char(string="Kode Kelurahan", required=True)
     kd_kec = fields.Many2one('cdn.ref_kecamatan', string="Kecamatan", required=True)
     kd_kab = fields.Many2one('cdn.ref_kota', string="Kabupaten/Kota", required=True)
-    pekerjaanpj = fields.Char(string="Pekerjaan Penjamin", required=True)
-    alamatpj = fields.Text(string="Alamat Penjamin", required=True)
-    kelurahanpj = fields.Char(string="Kelurahan Penjamin", required=True)
-    kecamatanpj = fields.Char(string="Kecamatan Penjamin", required=True)
-    kabupatenpj = fields.Char(string="Kabupaten Penjamin", required=True)
-    perusahaan_pasien = fields.Many2one('cdn.perusahaan_pasien', string="Perusahaan Pasien", required=True)
-    suku_bangsa = fields.Many2one('cdn.suku', string="Suku Bangsa", required=True)
-    bahasa_pasien = fields.Many2one('res.lang', string="Bahasa Pasien", required=True)
-    cacat_fisik = fields.Many2one('cdn.cacat_fisik', string="Cacat Fisik", required=True)
-    email = fields.Char(string="Email", required=True)
-    nip = fields.Char(string="NIP", required=True)
+    pekerjaanpj = fields.Char(string="Pekerjaan Penjamin")
+    alamatpj = fields.Text(string="Alamat Penjamin")
+    kelurahanpj = fields.Char(string="Kelurahan Penjamin")
+    kecamatanpj = fields.Many2one('cdn.ref_kecamatan', string="Kecamatan Penjamin")
+    kabupatenpj = fields.Many2one('cdn.ref_kota',string="Kabupaten Penjamin")
+    perusahaan_pasien = fields.Many2one('cdn.perusahaan_pasien', string="Perusahaan Pasien")
+    suku_bangsa = fields.Many2one('cdn.suku', string="Suku Bangsa")
+    bahasa_pasien = fields.Many2one('res.lang', string="Bahasa Pasien")
+    cacat_fisik = fields.Many2one('cdn.cacat_fisik', string="Cacat Fisik")
+    # email = fields.Char(string="Email")
+    nip = fields.Char(string="NIP")
     kd_prop = fields.Many2one('cdn.ref_propinsi', string="Provinsi", required=True)
-    propinsipj = fields.Char(string="Propinsi Penjamin", required=True)
+    propinsipj = fields.Many2one('cdn.ref_propinsi', string="Propinsi Penjamin")
 
     @api.model
     def action_activate_account(self):
         """Metode untuk mengaktifkan akun pasien."""
-        # Implementasi logika aktivasi akun
         for record in self:
-            # Contoh logika
             record.is_active = True
         return True
 

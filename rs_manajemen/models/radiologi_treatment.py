@@ -1,11 +1,11 @@
 from odoo import models, fields, api
 
-class IPDTreatment(models.Model):
-    _name = 'cdn.ipd.treatment'
-    _description = 'Jenis Perawatan Rawat Inap'
+class RadiologiTreatment(models.Model):
+    _name = 'cdn.radiologi.treatment'
+    _description = 'Jenis Perawatan Radiologi'
     _rec_name = 'name'
 
-    code = fields.Char(string='Kode Perawatan', readonly=True, copy=False, default='RIXXX')
+    code = fields.Char(string='Kode Perawatan', readonly=True, copy=False, default='RADXXX')
     name = fields.Char(string='Nama Jenis Perawatan', required=True)
     category_id = fields.Many2one('product.category', string='Kategori', required=True)
     doctor_fee = fields.Float(string='Tarif Dokter', required=True)
@@ -27,7 +27,7 @@ class IPDTreatment(models.Model):
         string='State',
         default='draft'
     )
-    product_id = fields.Many2one('product.product', string="Produk Layanan", readonly=True)
+    product_id = fields.Many2one('product.product', string="Produk Layanan", readonly=True, ondelete="cascade")
     tax_id = fields.Many2one('account.tax', string='Jenis Pajak', domain=[('type_tax_use', '=', 'sale')])
     total_with_tax = fields.Float(string='Total dengan Pajak', compute='_compute_total_with_tax', store=True)
 
@@ -64,13 +64,13 @@ class IPDTreatment(models.Model):
             last_record = self.search([], order='id desc', limit=1)
             if last_record and last_record.code:
                 try:
-                    last_number = int(last_record.code.split('RI')[-1])
+                    last_number = int(last_record.code.split('RAD')[-1])
                     new_number = last_number + 1
                 except ValueError:
                     new_number = 1
             else:
                 new_number = 1
-            vals['code'] = f'RI{new_number:03d}'
+            vals['code'] = f'RAD{new_number:03d}'
 
         product = self.env['product.product'].create({
             'name': vals.get('name'),
@@ -85,7 +85,7 @@ class IPDTreatment(models.Model):
         })
         vals['product_id'] = product.id
 
-        return super(IPDTreatment, self).create(vals)
+        return super(RadiologiTreatment, self).create(vals)
 
     def action_confirm(self):
         for rec in self:

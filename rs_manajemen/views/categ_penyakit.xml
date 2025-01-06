@@ -46,7 +46,7 @@
         </record>
 
         <!-- Menu Item -->
-        <menuitem name="Kategori Penyakit" id="penyakit_menu_act" parent="master_data_menu_categ"
-            action="cdn_penyakit_action" />
+        <menuitem name="Kategori Penyakit" id="penyakit_menu_act" parent="data_medis_categ"
+            action="cdn_penyakit_action" sequence="3"/>
     </data>
 </odoo>

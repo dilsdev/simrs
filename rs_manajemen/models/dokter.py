@@ -3,6 +3,7 @@ from odoo.exceptions import UserError
 
 class Doctor(models.Model):
     _name = 'cdn.doctor'
+    _description = 'Dokter'
     _inherits = {'hr.employee': 'employee_id'}
     
     employee_id = fields.Many2one(
@@ -34,7 +35,7 @@ class Doctor(models.Model):
     spesialis_id = fields.Many2one('cdn.spesialis', string="Spesialis")
     pendidikan_dokter = fields.One2many(
         'cdn.pendidikan_dokter',
-        'doctor_id',  # This should match the Many2one field in the related model
+        'doctor_id', 
         string="Riwayat Pendidikan Dokter"
     )
 

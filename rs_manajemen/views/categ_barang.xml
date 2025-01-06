@@ -10,7 +10,7 @@
             </p>
         </field>
     </record>
-    <menuitem name="Kategori Barang" id="categ_barang_menu_act" parent="master_data_menu_categ"
-            action="cdn_categ_barang_action" />
+    <menuitem name="Kategori Barang" id="categ_barang_menu_act" parent="data_medis_categ"
+            action="cdn_categ_barang_action" sequence="2"/>
     </data>
 </odoo>

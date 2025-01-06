@@ -37,8 +37,8 @@
         </record>
 
 
-        <menuitem name="Aturan Pemakaian" id="aturan_pemakaian_menu_act" parent="master_data_menu_categ"
-            action="cdn_aturan_pemakaian_action" />
+        <menuitem name="Aturan Pemakaian" id="aturan_pemakaian_menu_act" parent="data_medis_categ"
+            action="cdn_aturan_pemakaian_action" sequence="5"/>
 
     </data>
 </odoo>

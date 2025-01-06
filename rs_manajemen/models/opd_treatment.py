@@ -7,7 +7,7 @@ class OPDTreatment(models.Model):
     _rec_name = 'name'
 
     # Kode Perawatan (Auto-generated)
-    code = fields.Char(string='Kode Perawatan', readonly=True, copy=False, default='New')
+    code = fields.Char(string='Kode Perawatan', readonly=True, copy=False, default='RJXXX')
 
     # Nama Jenis Perawatan
     name = fields.Char(string='Nama Jenis Perawatan', required=True)
@@ -24,8 +24,11 @@ class OPDTreatment(models.Model):
     penjab_id = fields.Many2one('cdn.penanggung_jawab', string='Penanggung Jawab', required=True)
     poliklinik_id = fields.Many2one('cdn.poliklinik', string='Poliklinik', required=True)
 
-    # Status Aktif / Tidak
-    status = fields.Boolean(string='Status', default=True)
+    state = fields.Selection(
+        selection=[('draft', 'Draft'), ('confirmed', 'Confirmed')],
+        string='State',
+        default='draft'
+    )
 
     # Produk yang Terhubung
     product_id = fields.Many2one('product.product', string="Produk Layanan", readonly=True)
@@ -53,35 +56,43 @@ class OPDTreatment(models.Model):
             else:
                 rec.total_with_tax = rec.total_fee
 
-    # Override Create untuk Kode Auto-Increment
     @api.model
     def create(self, vals):
         if vals.get('code', 'New') == 'New':
             last_record = self.search([], order='id desc', limit=1)
             if last_record and last_record.code:
                 try:
-                    # Ambil angka terakhir dari kode (RJ001 -> 1)
                     last_number = int(last_record.code.split('RJ')[-1])
                     new_number = last_number + 1
                 except ValueError:
                     new_number = 1
             else:
                 new_number = 1
-            # Format Kode Baru: RJ001, RJ002, ...
             vals['code'] = f'RJ{new_number:03d}'
 
-        # Buat Produk di Inventory
         product = self.env['product.product'].create({
             'name': vals.get('name'),
             'default_code': vals['code'],
             'type': 'service',
             'categ_id': vals.get('category_id'),
-            'list_price': vals.get('doctor_fee') + vals.get('nurse_fee'),
-            'sale_ok': True,
+            'list_price': vals.get('doctor_fee') + vals.get('nurse_fee') + vals.get('room_fee', 0.0),
+            'sale_ok': vals.get('state') == 'confirmed',
             'purchase_ok': False,
             'available_in_pos': False,
-            'taxes_id': vals.get('taxes_id', []),  # Menyertakan pajak pada produk
+            'taxes_id': vals.get('taxes_id', []),
         })
         vals['product_id'] = product.id
 
         return super(OPDTreatment, self).create(vals)
+
+    def action_confirm(self):
+        for rec in self:
+            rec.state = 'confirmed'
+            if rec.product_id:
+                rec.product_id.write({'sale_ok': True})
+
+    def action_set_to_draft(self):
+        for rec in self:
+            rec.state = 'draft'
+            if rec.product_id:
+                rec.product_id.write({'sale_ok': False})

@@ -13,7 +13,6 @@ from . import suku
 from . import perusahaan_pasien
 from . import penanggung_jawab
 from . import categ_penyakit
-from . import kategori_perawatan
 from . import aturan_pemakaian
 from . import spesialis
 from . import opd_treatment
@@ -25,3 +24,4 @@ from . import jabatan
 from . import pendidikan_dokter
 from . import pasien
 from . import lab_treatment
+from . import radiologi_treatment

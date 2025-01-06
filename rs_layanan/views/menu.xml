@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <menuitem id="layanan_menu_root" name="Layanan" sequence="10" />
+        <menuitem id="igd_menu_categ" name="IGD" sequence="1" parent="layanan_menu_root" />
+        <menuitem id="ipd_menu_categ" name="Rawat Jalan" sequence="2" parent="layanan_menu_root" />
+            
+        <!-- <menuitem id="rawat_jalan_menu_categ" name="Rawat Jalan" sequence="2" parent="layanan_menu_root"/>
+        <menuitem id="rawat_inap_menu_categ" name="Rawat Inap" sequence="3" parent="layanan_menu_root"/>
+        <menuitem id="apotek_menu_categ" name="Apotek" sequence="4" parent="layanan_menu_root"/>
+        <menuitem id="laboratorium_menu_categ" name="Laboratorium" sequence="5" parent="layanan_menu_root"/>
+        <menuitem id="radiologi_menu_categ" name="Radiologi" sequence="6" parent="layanan_menu_root"/> -->
+    </data>
+</odoo>

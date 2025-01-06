@@ -1,12 +1,29 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <data>
-        <menuitem id="manajemen_menu_root" name="Manajemen" sequence="10"/>
-        <!-- <menuitem id="presensi_pegawai_menu_categ" name="Presensi Pegawai" sequence="1" parent="manajemen_menu_root"/>  *//Sequence 0 gae Dashboard//* -->
-        <!-- <menuitem id="dokter_menu_categ" name="Dokter" sequence="2" parent="manajemen_menu_root"/> -->
-        <menuitem id="petugas_menu_categ" name="Petugas" sequence="3" parent="manajemen_menu_root"/>
-        <!-- <menuitem id="kepegawaian_menu_categ" name="Kepegawaian" sequence="4" parent="manajemen_menu_root"/> -->
-        <!-- <menuitem id="akun_pegawai_menu_categ" name="Akun Pegawai" sequence="5" parent="manajemen_menu_root"/> -->
-        <menuitem id="master_data_menu_categ" name="Master Data" sequence="6" parent="manajemen_menu_root"/>
+        <menuitem id="manajemen_menu_root" name="Manajemen" sequence="10" />
+        <menuitem id="petugas_menu_categ" name="Petugas" sequence="3" parent="manajemen_menu_root" />
+        <menuitem id="master_data_menu_categ" name="Master Data" sequence="6"
+            parent="manajemen_menu_root" />
+
+        
+
+        <menuitem id="data_medis_categ" name="Data Medis Utama"
+            parent="master_data_menu_categ" sequence="10" />
+
+        <menuitem id="data_fasilitas_categ" name="Data Fasilitas dan Layanan"
+            parent="master_data_menu_categ" sequence="20" />
+
+        <menuitem id="data_tenaga_medis_categ" name="Data tenaga medis"
+            parent="master_data_menu_categ" sequence="30" />
+
+        <menuitem id="data_pasien_categ" name="Data Pasien dan Kependudukan"
+            parent="master_data_menu_categ" sequence="40" />
+
+        <menuitem id="data_wilayah_categ" name="Data Wilayah"
+            parent="master_data_menu_categ" sequence="50" />
+
+        <menuitem id="data_umum_categ" name="Data Umum"
+            parent="master_data_menu_categ" sequence="60" />
     </data>
 </odoo>

@@ -4,6 +4,13 @@
     <field name="model">cdn.opd.treatment</field>
     <field name="arch" type="xml">
         <form string="Jenis Perawatan Rawat Jalan">
+                <header>
+                    <button name="action_confirm" type="object" string="Confirm"
+                        class="oe_highlight" invisible="state != 'draft'" />
+                    <button name="action_set_to_draft" type="object" string="Set to Draft"
+                        class="btn-secondary" invisible="state != 'confirmed'" />
+                    <field name="state" widget="statusbar" statusbar_visible="draft,confirmed" />
+                </header>
             <sheet>
                 <group>
                     <group>
@@ -19,7 +26,6 @@
                         <field name="total_fee" readonly="1"/>
                         <field name="product_id" readonly="1"/>
                         <field name="tax_id"/>
-                        <field name="status"/>
                     </group>
                 </group>
                     <group class='oe_subtotal_footer'>
@@ -46,7 +52,6 @@
             <field name="doctor_fee"/>
             <field name="nurse_fee"/>
             <field name="total_with_tax"/> 
-            <field name="status"/>
         </list>
     </field>
 </record>
@@ -58,5 +63,6 @@
         <field name="view_mode">list,form</field>
     </record>
 
-    <menuitem id="menu_opd_treatment" parent="master_data_menu_categ" name="Perawatan Rawat Jalan" action="action_opd_treatment" sequence="20"/>
+    <menuitem id="menu_opd_treatment" parent="data_pasien_categ" name="Perawatan Rawat Jalan"
+        action="action_opd_treatment" sequence="1" />
 </odoo>

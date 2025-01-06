@@ -1,12 +1,11 @@
 <odoo>
     <data>
         <!-- cdn.kategori_perawatan list view -->
-        <record id="cdn_kategori_perawatan_view_list" model="ir.ui.view">
+        <!-- <record id="cdn_kategori_perawatan_view_list" model="ir.ui.view">
             <field name="name">cdn.kategori_perawatan.view.list</field>
             <field name="model">cdn.kategori_perawatan</field>
             <field name="arch" type="xml">
                 <list expand="1">
-                    <!-- Add your fields here -->
                     <field name="kode_id" />
                     <field name="name" />
                 </list>
@@ -30,8 +29,6 @@
                             <group>
                             </group>
                         </group>
-                        <!-- <notebook>
-                        </notebook> -->
                     </sheet>
                 </form>
             </field>
@@ -45,9 +42,9 @@
             <field name="context">{ "search_default_group_by_fiscalyear_id": 1}</field>
         </record>
 
-
-        <menuitem name="Kategori Perawatan" id="kategori_perawatan_menu_act" parent="master_data_menu_categ"
-            action="cdn_kategori_perawatan_action" />
+        <menuitem name="Kategori Perawatan" id="kategori_perawatan_menu_act"
+            parent="data_medis_categ"
+            action="cdn_kategori_perawatan_action" sequence="4" /> -->
 
     </data>
 </odoo>
