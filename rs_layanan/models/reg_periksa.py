@@ -1,0 +1,64 @@
+from odoo import models, fields
+
+class Reg_periksa(models.Model):
+    _name = 'cdn.reg_periksa'
+    _description = 'Registrasi Pemeriksaan'
+    _rec_name = 'no_rawat'
+
+    no_reg = fields.Char(string='No Registrasi', size=8)
+    no_rawat = fields.Char(string='No Rawat', size=17, required=True, index=True)
+    tgl_registrasi = fields.Date(string='Tanggal Registrasi')
+    jam_reg = fields.Float(string='Jam Registrasi', help="Gunakan format desimal untuk jam, misalnya 13.30 untuk 13:30.")
+    kd_dokter = fields.Many2one('cdn.doctor', string='Kode Dokter', ondelete='cascade', index=True)
+    no_rkm_medis = fields.Many2one('cdn.pasien', string='No Rekam Medis', ondelete='cascade', index=True)
+    kd_poli = fields.Many2one('cdn.poliklinik', string='Kode Poliklinik', ondelete='cascade', index=True)
+    p_jawab = fields.Char(string='Penanggung Jawab', size=100)
+    almt_pj = fields.Char(string='Alamat Penanggung Jawab', size=200)
+    hubunganpj = fields.Char(string='Hubungan dengan Penanggung Jawab', size=20)
+    biaya_reg = fields.Float(string='Biaya Registrasi')
+    stts = fields.Selection([
+        ('Belum', 'Belum'),
+        ('Sudah', 'Sudah'),
+        ('Batal', 'Batal'),
+        ('Berkas Diterima', 'Berkas Diterima'),
+        ('Dirujuk', 'Dirujuk'),
+        ('Meninggal', 'Meninggal'),
+        ('Dirawat', 'Dirawat'),
+        ('Pulang Paksa', 'Pulang Paksa')
+    ], string='Status')
+    stts_daftar = fields.Selection([
+        ('-', '-'),
+        ('Lama', 'Lama'),
+        ('Baru', 'Baru')
+    ], string='Status Daftar', required=True)
+    status_lanjut = fields.Selection([
+        ('Ralan', 'Rawat Jalan'),
+        ('Ranap', 'Rawat Inap')
+    ], string='Status Lanjut', required=True, index=True)
+    kd_pj = fields.Many2one('cdn.penanggung_jawab', string='Kode Penjamin', ondelete='cascade', index=True)
+    umurdaftar = fields.Integer(string='Umur Daftar')
+    sttsumur = fields.Selection([
+        ('Th', 'Tahun'),
+        ('Bl', 'Bulan'),
+        ('Hr', 'Hari')
+    ], string='Status Umur')
+    status_bayar = fields.Selection([
+        ('Sudah Bayar', 'Sudah Bayar'),
+        ('Belum Bayar', 'Belum Bayar')
+    ], string='Status Bayar', required=True, index=True)
+    status_poli = fields.Selection([
+        ('Lama', 'Lama'),
+        ('Baru', 'Baru')
+    ], string='Status Poliklinik', required=True)
+
+    _sql_constraints = [
+        ('no_rawat_uniq', 'unique(no_rawat)', 'Nomor Rawat harus unik!'),
+    ]
+
+    # Relasi dengan foreign key
+    _constraints = [
+        ('fk_kd_poli', 'foreign (kd_poli) references poliklinik (id) on delete cascade', 'Invalid Kode Poliklinik!'),
+        ('fk_kd_dokter', 'foreign (kd_dokter) references dokter (id) on delete cascade', 'Invalid Kode Dokter!'),
+        ('fk_kd_pj', 'foreign (kd_pj) references penjab (id) on delete cascade', 'Invalid Kode Penjamin!'),
+        ('fk_no_rkm_medis', 'foreign (no_rkm_medis) references pasien (id) on delete cascade', 'Invalid No Rekam Medis!'),
+    ]

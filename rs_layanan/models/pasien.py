@@ -1,20 +1,23 @@
 from odoo import models, fields, api
 from datetime import datetime
+import logging
+
+_logger = logging.getLogger(__name__)
 
 class Pasien(models.Model):
     _name = 'cdn.pasien'
     _description = 'Data Pasien'
     _inherits = {'res.partner': 'partner_id'}
 
+    # Field Definitions
     no_rkm_medis = fields.Char(string='No Rekam Medis', required=True, copy=False, readonly=True, default='NRM/20XX/XXX')
-    # name = fields.Char(string="Nama Pasien", required=True)  # Nama pasien harus required
     partner_id = fields.Many2one('res.partner', string="Contact", required=False, ondelete="cascade")
-    no_ktp = fields.Char(string="Nomor KTP", required=True)  # KTP penting untuk identifikasi
-    jk = fields.Selection([('L', 'Laki-laki'), ('P', 'Perempuan')], string="Jenis Kelamin", required=True)  # Jenis kelamin penting untuk medis
-    tmp_lahir = fields.Char(string="Tempat Lahir", required=True)  # Tempat lahir penting untuk identifikasi
-    tgl_lahir = fields.Date(string="Tanggal Lahir", required=True)  # Tanggal lahir penting untuk medis
-    nm_ibu = fields.Char(string="Nama Ibu", required=True)  # Tetap required untuk verifikasi
-    alamat = fields.Text(string="Alamat", required=True)  # Alamat penting untuk kunjungan/kontak
+    no_ktp = fields.Char(string="Nomor KTP", required=True)
+    jk = fields.Selection([('L', 'Laki-laki'), ('P', 'Perempuan')], string="Jenis Kelamin", required=True)
+    tmp_lahir = fields.Char(string="Tempat Lahir", required=True)
+    tgl_lahir = fields.Date(string="Tanggal Lahir", required=True)
+    nm_ibu = fields.Char(string="Nama Ibu", required=True)
+    alamat = fields.Text(string="Alamat", required=True)
     gol_darah = fields.Selection([('A', 'A'), ('B', 'B'), ('O', 'O'), ('AB', 'AB'), ('-', '-')], string="Golongan Darah")
     pekerjaan = fields.Char(string="Pekerjaan")
     stts_nikah = fields.Selection([
@@ -25,8 +28,7 @@ class Pasien(models.Model):
         ('JOMBLO', 'Jomblo')
     ], string="Status Pernikahan")
     agama = fields.Char(string="Agama")
-    tgl_daftar = fields.Date(string="Tanggal Daftar", required=True)  # Penting untuk administrasi
-    # no_tlp = fields.Char(string="Nomor Telepon", required=True)  # Penting untuk kontak
+    tgl_daftar = fields.Date(string="Tanggal Daftar", required=True)
     umur = fields.Char(string="Umur", required=True)
     pnd = fields.Selection([
         ('TS', 'Tidak Sekolah'),
@@ -52,26 +54,26 @@ class Pasien(models.Model):
         ('SAUDARA', 'Saudara'),
         ('ANAK', 'Anak')
     ], string="Hubungan Keluarga")
-    namakeluarga = fields.Char(string="Nama Keluarga")  # Tidak semua pasien punya keluarga dekat
-    kd_pj = fields.Many2one('cdn.penanggung_jawab',string="Kode Penjamin")  # Bisa bayar sendiri
+    namakeluarga = fields.Char(string="Nama Keluarga")
+    kd_pj = fields.Many2one('cdn.penanggung_jawab', string="Kode Penjamin")
     no_peserta = fields.Char(string="Nomor Peserta")
     kd_kel = fields.Char(string="Kode Kelurahan", required=True)
-    kd_kec = fields.Many2one('cdn.ref_kecamatan', string="Kecamatan", required=True)
-    kd_kab = fields.Many2one('cdn.ref_kota', string="Kabupaten/Kota", required=True)
+    kd_kec = fields.Many2one('cdn.ref_kecamatan', string="Kecamatan", ondelete="set null")
+    kd_kab = fields.Many2one('cdn.ref_kota', string="Kabupaten/Kota", ondelete="set null")
+    kd_prop = fields.Many2one('cdn.ref_propinsi', string="Provinsi", ondelete="set null")
     pekerjaanpj = fields.Char(string="Pekerjaan Penjamin")
     alamatpj = fields.Text(string="Alamat Penjamin")
     kelurahanpj = fields.Char(string="Kelurahan Penjamin")
     kecamatanpj = fields.Many2one('cdn.ref_kecamatan', string="Kecamatan Penjamin")
-    kabupatenpj = fields.Many2one('cdn.ref_kota',string="Kabupaten Penjamin")
+    kabupatenpj = fields.Many2one('cdn.ref_kota', string="Kabupaten Penjamin")
     perusahaan_pasien = fields.Many2one('cdn.perusahaan_pasien', string="Perusahaan Pasien")
     suku_bangsa = fields.Many2one('cdn.suku', string="Suku Bangsa")
     bahasa_pasien = fields.Many2one('res.lang', string="Bahasa Pasien")
     cacat_fisik = fields.Many2one('cdn.cacat_fisik', string="Cacat Fisik")
-    # email = fields.Char(string="Email")
     nip = fields.Char(string="NIP")
-    kd_prop = fields.Many2one('cdn.ref_propinsi', string="Provinsi", required=True)
     propinsipj = fields.Many2one('cdn.ref_propinsi', string="Propinsi Penjamin")
 
+    # Methods
     @api.model
     def action_activate_account(self):
         """Metode untuk mengaktifkan akun pasien."""
@@ -81,6 +83,7 @@ class Pasien(models.Model):
 
     @api.model
     def create(self, vals):
+        _logger.debug("Creating Pasien with values: %s", vals)
         if vals.get('no_rkm_medis', 'Baru') == 'Baru':
             current_year = datetime.now().year
             last_record = self.search([('no_rkm_medis', 'like', f'KMR/{current_year}/%')], order='id desc', limit=1)
@@ -96,4 +99,37 @@ class Pasien(models.Model):
                 new_number = 1
 
             vals['no_rkm_medis'] = f'KMR/{current_year}/{new_number:03d}'
+
+        self._validate_many2one_fields(vals)
         return super(Pasien, self).create(vals)
+
+    def write(self, vals):
+        _logger.debug("Updating Pasien ID %s with values: %s", self.ids, vals)
+        self._validate_many2one_fields(vals)
+        return super(Pasien, self).write(vals)
+
+    def _validate_many2one_fields(self, vals):
+        many2one_fields = ['kd_kec', 'kd_kab', 'kd_prop']
+        for field in many2one_fields:
+            if field in vals and vals[field]:
+                record = self.env[self._fields[field].comodel_name].browse(vals[field])
+                if not record.exists():
+                    _logger.error("Invalid reference for field %s: %s", field, vals[field])
+                    raise ValueError(f"Invalid reference for field {field}: {vals[field]}")
+
+    @api.onchange('kd_kec', 'kd_kab', 'kd_prop')
+    def _onchange_location(self):
+        for record in self:
+            _logger.debug(
+                "Onchange triggered for record ID %s: kd_kec=%s, kd_kab=%s, kd_prop=%s",
+                record.id, record.kd_kec, record.kd_kab, record.kd_prop
+            )
+            if record.kd_kec and not record.kd_kec.exists():
+                _logger.warning("Invalid kd_kec reference for record ID %s", record.id)
+                record.kd_kec = False
+            if record.kd_kab and not record.kd_kab.exists():
+                _logger.warning("Invalid kd_kab reference for record ID %s", record.id)
+                record.kd_kab = False
+            if record.kd_prop and not record.kd_prop.exists():
+                _logger.warning("Invalid kd_prop reference for record ID %s", record.id)
+                record.kd_prop = False
