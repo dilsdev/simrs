@@ -8,7 +8,6 @@ class Pasien(models.Model):
     _name = 'cdn.pasien'
     _description = 'Data Pasien'
     _inherits = {'res.partner': 'partner_id'}
-
     # Field Definitions
     no_rkm_medis = fields.Char(string='No Rekam Medis', required=True, copy=False, readonly=True, default='NRM/20XX/XXX')
     partner_id = fields.Many2one('res.partner', string="Contact", required=False, ondelete="cascade")
@@ -16,7 +15,7 @@ class Pasien(models.Model):
     jk = fields.Selection([('L', 'Laki-laki'), ('P', 'Perempuan')], string="Jenis Kelamin", required=True)
     tmp_lahir = fields.Char(string="Tempat Lahir", required=True)
     tgl_lahir = fields.Date(string="Tanggal Lahir", required=True)
-    nm_ibu = fields.Char(string="Nama Ibu", required=True)
+    p_jawab = fields.Char(string="Nama PJ")
     alamat = fields.Text(string="Alamat", required=True)
     gol_darah = fields.Selection([('A', 'A'), ('B', 'B'), ('O', 'O'), ('AB', 'AB'), ('-', '-')], string="Golongan Darah")
     pekerjaan = fields.Char(string="Pekerjaan")

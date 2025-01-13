@@ -37,7 +37,7 @@
                         <div class="oe_title">
                             <label for="name" class="oe_edit_only" />
                             <h1>
-                                <field name="name" placeholder="Nama Dokter" />
+                                <field name="name" placeholder="Nama Pasien" />
                             </h1>
                         </div>
                         <div class="oe_title">
@@ -52,7 +52,6 @@
                                 <field name="jk" required="1" />
                                 <field name="tgl_lahir" required="1" />
                                 <field name="tmp_lahir" required="1" />
-                                <field name="nm_ibu" required="1" />
                                 <field name="gol_darah" />
                             </group>
                             <group>
@@ -92,10 +91,13 @@
                                     </group>
                                 </group>
                             </page>
-                            <page string="Data Penjamin">
+                            <page string="Data Penanggung Jawab">
+                                <group>
+                                    <field name="p_jawab" />
+                                    <field name="pekerjaanpj" />
+                                </group>
                                 <group>
                                     <group>
-                                        <field name="pekerjaanpj" />
                                         <field name="alamatpj" />
                                         <field name="kelurahanpj" />
                                         <field name="kecamatanpj" />
@@ -139,10 +141,11 @@
                     <field name="image_128" />
                     <templates>
                         <t t-name="kanban-box">
-                            <div class="oe_kanban_global_click d-flex align-items-center" style="gap=10px">
+                            <div class="oe_kanban_global_click d-flex align-items-center"
+                                style="gap=10px">
                                 <!-- Gambar -->
                                 <div class="kanban-image-container"
-                                   >
+                                >
                                     <field name="avatar_128" class="w-100" widget="image"
                                         options="{'img_class': 'object-fit-contain'}" />
                                 </div>

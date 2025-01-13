@@ -1,4 +1,4 @@
-from odoo import models, fields
+from odoo import models, fields, api
 
 class Reg_periksa(models.Model):
     _name = 'cdn.reg_periksa'
@@ -12,9 +12,9 @@ class Reg_periksa(models.Model):
     kd_dokter = fields.Many2one('cdn.doctor', string='Kode Dokter', ondelete='cascade', index=True)
     no_rkm_medis = fields.Many2one('cdn.pasien', string='No Rekam Medis', ondelete='cascade', index=True)
     kd_poli = fields.Many2one('cdn.poliklinik', string='Kode Poliklinik', ondelete='cascade', index=True)
-    p_jawab = fields.Char(string='Penanggung Jawab', size=100)
-    almt_pj = fields.Char(string='Alamat Penanggung Jawab', size=200)
-    hubunganpj = fields.Char(string='Hubungan dengan Penanggung Jawab', size=20)
+    p_jawab = fields.Char(string='Penanggung Jawab', readonly=True)
+    almt_pj = fields.Char(string='Alamat Penanggung Jawab', readonly=True)
+    hubunganpj = fields.Char(string='Hubungan dengan Penanggung Jawab', readonly=True)
     biaya_reg = fields.Float(string='Biaya Registrasi')
     stts = fields.Selection([
         ('Belum', 'Belum'),
@@ -55,10 +55,30 @@ class Reg_periksa(models.Model):
         ('no_rawat_uniq', 'unique(no_rawat)', 'Nomor Rawat harus unik!'),
     ]
 
-    # Relasi dengan foreign key
-    _constraints = [
-        ('fk_kd_poli', 'foreign (kd_poli) references poliklinik (id) on delete cascade', 'Invalid Kode Poliklinik!'),
-        ('fk_kd_dokter', 'foreign (kd_dokter) references dokter (id) on delete cascade', 'Invalid Kode Dokter!'),
-        ('fk_kd_pj', 'foreign (kd_pj) references penjab (id) on delete cascade', 'Invalid Kode Penjamin!'),
-        ('fk_no_rkm_medis', 'foreign (no_rkm_medis) references pasien (id) on delete cascade', 'Invalid No Rekam Medis!'),
-    ]
+    @api.onchange('no_rkm_medis')
+    def _onchange_no_rkm_medis(self):
+        if self.no_rkm_medis:
+            self.p_jawab = self.no_rkm_medis.p_jawab
+            self.hubunganpj = self.no_rkm_medis.keluarga
+            self.almt_pj = self.no_rkm_medis.alamatpj
+
+    @api.onchange('stts_daftar', 'kd_poli')
+    def _onchange_stts_daftar(self):
+        if self.stts_daftar and self.kd_poli:
+            if self.kd_poli.exists():  # Pastikan kd_poli valid
+                if self.stts_daftar == 'Lama':
+                    self.biaya_reg = self.kd_poli.registrasi_lama
+                elif self.stts_daftar == 'Baru':
+                    self.biaya_reg = self.kd_poli.registrasi
+            else:
+                self.biaya_reg = 0.0
+        else:
+            self.biaya_reg = 0.0
+    
+    def action_confirm(self):
+        for record in self:
+            record.stts = 'Sudah'
+
+    def action_cancel(self):
+        for record in self:
+            record.stts = 'Batal'

@@ -2,3 +2,4 @@
 
 # from . import models
 from . import pasien
+from . import reg_periksa   
