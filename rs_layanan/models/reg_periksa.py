@@ -17,15 +17,15 @@ class Reg_periksa(models.Model):
     hubunganpj = fields.Char(string='Hubungan dengan Penanggung Jawab', readonly=True)
     biaya_reg = fields.Float(string='Biaya Registrasi')
     stts = fields.Selection([
-        ('Belum', 'Belum'),
-        ('Sudah', 'Sudah'),
-        ('Batal', 'Batal'),
-        ('Berkas Diterima', 'Berkas Diterima'),
-        ('Dirujuk', 'Dirujuk'),
-        ('Meninggal', 'Meninggal'),
-        ('Dirawat', 'Dirawat'),
-        ('Pulang Paksa', 'Pulang Paksa')
-    ], string='Status')
+    ('Belum', 'Belum'),
+    ('Sudah', 'Sudah'),
+    ('Batal', 'Batal'),
+    ('Berkas Diterima', 'Berkas Diterima'),
+    ('Dirujuk', 'Dirujuk'),
+    ('Meninggal', 'Meninggal'),
+    ('Dirawat', 'Dirawat'),
+    ('Pulang Paksa', 'Pulang Paksa')
+    ], string='Status', default='Belum')
     stts_daftar = fields.Selection([
         ('-', '-'),
         ('Lama', 'Lama'),
@@ -58,18 +58,22 @@ class Reg_periksa(models.Model):
     @api.onchange('no_rkm_medis')
     def _onchange_no_rkm_medis(self):
         if self.no_rkm_medis:
-            self.p_jawab = self.no_rkm_medis.p_jawab
-            self.hubunganpj = self.no_rkm_medis.keluarga
-            self.almt_pj = self.no_rkm_medis.alamatpj
+            self.p_jawab = self.no_rkm_medis.p_jawab or ''
+            self.hubunganpj = self.no_rkm_medis.keluarga or ''
+            self.almt_pj = self.no_rkm_medis.alamatpj or ''
+        else:
+            self.p_jawab = ''
+            self.hubunganpj = ''
+            self.almt_pj = ''
 
     @api.onchange('stts_daftar', 'kd_poli')
     def _onchange_stts_daftar(self):
         if self.stts_daftar and self.kd_poli:
-            if self.kd_poli.exists():  # Pastikan kd_poli valid
+            if self.kd_poli.id:  # Pastikan kd_poli memiliki ID yang valid
                 if self.stts_daftar == 'Lama':
-                    self.biaya_reg = self.kd_poli.registrasi_lama
+                    self.biaya_reg = self.kd_poli.registrasi_lama or 0.0
                 elif self.stts_daftar == 'Baru':
-                    self.biaya_reg = self.kd_poli.registrasi
+                    self.biaya_reg = self.kd_poli.registrasi or 0.0
             else:
                 self.biaya_reg = 0.0
         else:

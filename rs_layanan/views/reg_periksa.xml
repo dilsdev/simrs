@@ -1,3 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <data>
         <!-- List View -->
@@ -6,7 +7,7 @@
             <field name="model">cdn.reg_periksa</field>
             <field name="arch" type="xml">
                 <list decoration-info="stts == 'Sudah'" decoration-warning="stts == 'Belum'"
-                    decoration-danger="stts == 'Batal'">
+                      decoration-danger="stts == 'Batal'">
                     <field name="no_rawat" />
                     <field name="tgl_registrasi" />
                     <field name="jam_reg" />
@@ -30,61 +31,51 @@
             <field name="arch" type="xml">
                 <form string="Registrasi Pemeriksaan">
                     <header>
-                        <field name="stts" widget="statusbar" statusbar_visible="Belum,Sudah,Batal" />
-                        <!-- Updated button visibility using direct invisible condition -->
                         <button name="action_confirm" type="object" string="Confirm"
                             class="oe_highlight" invisible="stts != 'Belum'" />
                         <button name="action_cancel" type="object" string="Cancel"
                             class="oe_highlight" invisible="stts != 'Belum'" />
+                        <field name="stts" widget="statusbar" 
+                               statusbar_visible="Belum,Sudah,Batal,Berkas Diterima,Dirujuk,Meninggal,Dirawat,Pulang Paksa"
+                               options="{'clickable': true}" />
                     </header>
                     <sheet>
-                        <notebook>
-                            <!-- Tab 1: Informasi Dasar -->
-                            <page string="Informasi Dasar">
-                                <group>
-                                    <group>
-                                        <field name="no_reg" />
-                                        <field name="no_rawat" />
-                                        <field name="tgl_registrasi" />
-                                        <field name="jam_reg" />
-                                        <field name="kd_dokter" />
-                                    </group>
-                                    <group>
-                                        <field name="no_rkm_medis" />
-                                        <field name="kd_poli" />
-                                        <field name="biaya_reg" />
-                                        <field name="stts_daftar" />
-                                        <field name="status_lanjut" />
-                                    </group>
-                                </group>
-                            </page>
-                            <!-- Tab 2: Penanggung Jawab -->
-                            <page string="Penanggung Jawab">
-                                <group>
-                                    <group>
-                                        <field name="p_jawab" readonly="1" />
-                                        <field name="hubunganpj" readonly="1" />
-                                    </group>
-                                    <group>
-                                        <field name="almt_pj" readonly="1" />
-                                        <field name="kd_pj" />
-                                    </group>
-                                </group>
-                            </page>
-                            <!-- Tab 3: Informasi Tambahan -->
-                            <page string="Informasi Tambahan">
-                                <group>
-                                    <group>
-                                        <field name="umurdaftar" />
-                                        <field name="sttsumur" />
-                                    </group>
-                                    <group>
-                                        <field name="status_bayar" />
-                                        <field name="status_poli" />
-                                    </group>
-                                </group>
-                            </page>
-                        </notebook>
+                        <group>
+                            <group>
+                                <field name="no_reg" />
+                                <field name="no_rawat" />
+                                <field name="tgl_registrasi" />
+                                <field name="jam_reg" />
+                                <field name="kd_dokter" />
+                            </group>
+                            <group>
+                                <field name="no_rkm_medis" />
+                                <field name="kd_poli" />
+                                <field name="biaya_reg" />
+                                <field name="stts_daftar" />
+                                <field name="status_lanjut" />
+                            </group>
+                        </group>
+                        <group string="Informasi Tambahan">
+                            <group>
+                                <field name="status_bayar" />
+                                <field name="status_poli" />
+                            </group>
+                            <group>
+                                <field name="umurdaftar" />
+                                <field name="sttsumur" />
+                            </group>
+                        </group>
+                        <group string="Penanggung Jawab">
+                            <group>
+                                <field name="p_jawab" readonly="1" />
+                                <field name="hubunganpj" readonly="1" />
+                            </group>
+                            <group>
+                                <field name="almt_pj" readonly="1" />
+                                <field name="kd_pj" />
+                            </group>
+                        </group>
                     </sheet>
                 </form>
             </field>
