@@ -1,0 +1,77 @@
+<odoo>
+    <record id="view_jns_perawatan_form" model="ir.ui.view">
+        <field name="name">cdn.jns_perawatan.form</field>
+        <field name="model">cdn.jns_perawatan</field>
+        <field name="arch" type="xml">
+            <form string="Jenis Perawatan">
+                <sheet>
+                    <group>
+                        <field name="kd_jenis_prw" />
+                        <field name="nm_perawatan" />
+                        <field name="status" />
+                    </group>
+                    <notebook>
+                        <page string="Detail Perawatan">
+                            <group>
+                                <field name="kd_kategori" />
+                                <field name="material" />
+                                <field name="bhp" />
+                                <field name="tarif_tindakandr" />
+                                <field name="tarif_tindakanpr" />
+                            </group>
+                            <group>
+                                <field name="kso" />
+                                <field name="menejemen" />
+                                <field name="total_byrdr" />
+                                <field name="total_byrpr" />
+                                <field name="total_byrdrpr" />
+                            </group>
+                        </page>
+                        <page string="Poli dan Penjab">
+                            <group>
+                                <field name="kd_pj" />
+                                <field name="kd_poli" />
+                            </group>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_jns_perawatan_list" model="ir.ui.view">
+        <field name="name">cdn.jns_perawatan.list</field>
+        <field name="model">cdn.jns_perawatan</field>
+        <field name="arch" type="xml">
+            <list string="Jenis Perawatan">
+                <field name="kd_jenis_prw" />
+                <field name="nm_perawatan" />
+                <field name="status" />
+                <field name="kd_kategori" />
+                <field name="material" />
+                <field name="bhp" />
+                <field name="tarif_tindakandr" />
+                <field name="tarif_tindakanpr" />
+                <field name="kso" />
+                <field name="menejemen" />
+                <field name="total_byrdr" />
+                <field name="total_byrpr" />
+                <field name="total_byrdrpr" />
+                <field name="kd_pj" />
+                <field name="kd_poli" />
+            </list>
+        </field>
+    </record>
+
+    <record id="action_jns_perawatan" model="ir.actions.act_window">
+        <field name="name">Jenis Perawatan</field>
+        <field name="res_model">cdn.jns_perawatan</field>
+        <field name="view_mode">list,form</field>
+        <field name="view_id" ref="view_jns_perawatan_list"/>
+        <field name="context">{}</field>
+        <field name="domain">[]</field>
+    </record>
+
+
+    <menuitem id="menu_jns_perawatan" name="Jenis Perawatan" parent="data_medis_categ" action="action_jns_perawatan" sequence="1"/>
+</odoo>

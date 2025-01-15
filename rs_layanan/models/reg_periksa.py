@@ -86,3 +86,18 @@ class Reg_periksa(models.Model):
     def action_cancel(self):
         for record in self:
             record.stts = 'Batal'
+
+    @api.model
+    def create(self, vals):
+        # Membuat record di 'cdn.reg_periksa' terlebih dahulu
+        reg_periksa = super(Reg_periksa, self).create(vals)
+
+        # Membuat record baru di 'cdn.rawat_jalan' setelah 'cdn.reg_periksa' berhasil dibuat
+        self.env['cdn.rawat_jalan'].create({
+            'no_rawat': reg_periksa.id,  # Menggunakan ID dari 'cdn.reg_periksa'
+            'kd_dokter': reg_periksa.kd_dokter.id,
+            'no_rkm_medis': reg_periksa.no_rkm_medis.id,
+            'pasien': reg_periksa.no_rkm_medis.name,  # Nama pasien diambil dari 'cdn.pasien'
+        })
+
+        return reg_periksa

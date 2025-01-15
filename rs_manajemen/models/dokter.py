@@ -40,17 +40,11 @@ class Doctor(models.Model):
     )
 
     jns_pegawai = fields.Selection([
+        ('kasir', 'Kasir'),
         ('dokter', 'Dokter'),
         ('perawat', 'Perawat'),
         ('apoteker', 'Apoteker'),
-        ('tenaga_medis_lainnya', 'Tenaga Medis Lainnya'),
-        ('administrasi_rumah_sakit', 'Administrasi Rumah Sakit'),
-        ('petugas_kebersihan_keamanan', 'Petugas Kebersihan dan Keamanan'),
-        ('teknisi_medis', 'Teknisi Medis'),
-        ('manajer_rumah_sakit', 'Manajer Rumah Sakit'),
-        ('staf_keuangan_akuntansi', 'Staf Keuangan dan Akuntansi'),
-        ('staf_it', 'Staf IT'),
-    ], string='Jenis Pegawai', required=True)
+    ], string=' Jenis Pegawai', required=True)
 
     @api.constrains('kd_dokter')
     def _check_kd_dokter(self):
@@ -74,13 +68,7 @@ class Doctor(models.Model):
             'dokter': 'rs_dokter.group_dokter_staff',
             'perawat': 'rs_perawat.group_perawat_staff',
             'apoteker': 'rs_apoteker.group_apoteker_staff',
-            'tenaga_medis_lainnya': 'rs_tenaga_medis_lainnya.group_tenaga_medis_lainnya',
-            'administrasi_rumah_sakit': 'rs_administrasi_rumah_sakit.group_administrasi_staff',
-            'petugas_kebersihan_keamanan': 'rs_petugas_kebersihan_keamanan.group_petugas_kebersihan_keamanan',
-            'teknisi_medis': 'rs_teknisi_medis.group_teknisi_medis',
-            'manajer_rumah_sakit': 'rs_manajer_rumah_sakit.group_manajer_rumah_sakit',
-            'staf_keuangan_akuntansi': 'rs_staf_keuangan_akuntansi.group_staf_keuangan_akuntansi',
-            'staf_it': 'rs_staf_it.group_staf_it'
+            'kasir': 'rs_kasir.group_kasir_staff'
         }
 
         if self.jns_pegawai not in group_mapping:

@@ -22,3 +22,4 @@ access_cdn_petugas,access_cdn_petugas,model_cdn_petugas,base.group_user,1,1,1,1
 access_cdn_lab_treatment,access_cdn_lab_treatment,model_cdn_lab_treatment,base.group_user,1,1,1,1
 access_cdn_lab_treatment_detail,access_cdn_lab_treatment_detail,model_cdn_lab_treatment_detail,base.group_user,1,1,1,1
 access_cdn_radiologi_treatment,access_cdn_radiologi_treatment,model_cdn_radiologi_treatment,base.group_user,1,1,1,1
+access_cdn_jns_perawatan,access_cdn_jns_perawatan,model_cdn_jns_perawatan,base.group_user,1,1,1,1

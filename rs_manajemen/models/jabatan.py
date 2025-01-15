@@ -8,4 +8,3 @@ class Jabatan(models.Model):
     name = fields.Char('Nama Jabatan', required=True)
     kode_jabatan = fields.Char('Kode Jabatan', required=True)
     deskripsi = fields.Text('Deskripsi Jabatan')
-

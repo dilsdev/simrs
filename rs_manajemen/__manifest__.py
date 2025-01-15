@@ -52,6 +52,7 @@ Long description of module's purpose
         'views/pendidikan_dokter.xml',
         'views/lab_treatment.xml',
         'views/radiologi_treatment.xml',
+        'views/jns_perawatan.xml',
     ],
     # only loaded in demonstration mode
     'demo': [

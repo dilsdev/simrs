@@ -6,7 +6,7 @@ class Rawat_jl_pr(models.Model):
     _rec_name = 'no_rawat'
 
     no_rawat = fields.Char(string='No Rawat', required=True, index=True)
-    kd_jenis_prw = fields.Char(string='Kode Jenis Perawatan', required=True, index=True)
+    kd_jenis_prw = fields.Many2one('cdn.jns_perawatan', string='Kode Jenis Perawatan',required=True, index=True)
     nip = fields.Char(string='NIP', required=True, index=True)
     tgl_perawatan = fields.Date(string='Tanggal Perawatan', required=True)
     jam_rawat = fields.Float(string='Jam Rawat', required=True, help="Gunakan format jam desimal (contoh: 14.30 untuk 14:30)")

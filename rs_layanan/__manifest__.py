@@ -26,6 +26,7 @@ Long description of module's purpose
         'views/menu.xml',
         'views/pasien.xml',
         'views/reg_periksa.xml',
+        'views/rawat_jalan.xml',
         # 'views/views.xml',
         # 'views/templates.xml',
     ],

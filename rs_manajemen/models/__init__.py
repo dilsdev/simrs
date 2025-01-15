@@ -24,3 +24,4 @@ from . import jabatan
 from . import pendidikan_dokter
 from . import lab_treatment
 from . import radiologi_treatment
+from . import jns_perawatan

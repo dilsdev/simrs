@@ -9,6 +9,8 @@
                     <field name="penyakit_id" string="Kode Penyakit"/>
                     <field name="name" string="Nama Penyakit"/>
                     <field name="ciri" string="Ciri Umum"/>
+                    <field name="keterangan" string="Keterangan"/>
+                    <field name="status" string="Status Menular"/>
                 </list>
             </field>
         </record>
@@ -18,7 +20,7 @@
             <field name="name">cdn.penyakit.view.form</field>
             <field name="model">cdn.penyakit</field>
             <field name="arch" type="xml">
-                <form string="Form Kategori Penyakit">
+                <form string="Form Penyakit">
                     <sheet>
                         <div class="oe_title">
                             <h1>
@@ -29,6 +31,8 @@
                             <group>
                                 <field name="penyakit_id" string="Kode Penyakit" placeholder="Contoh: 001" />
                                 <field name="ciri" string="Ciri Umum"/>
+                                <field name="keterangan" string="Keterangan"/>
+                                <field name="status" string="Status Menular"/>
                             </group>
                         </group>
                     </sheet>
@@ -38,7 +42,7 @@
 
         <!-- Action -->
         <record id="cdn_penyakit_action" model="ir.actions.act_window">
-            <field name="name">Kategori Penyakit</field>
+            <field name="name">Penyakit</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">cdn.penyakit</field>
             <field name="view_mode">list,form</field>
@@ -46,7 +50,7 @@
         </record>
 
         <!-- Menu Item -->
-        <menuitem name="Kategori Penyakit" id="penyakit_menu_act" parent="data_medis_categ"
+        <menuitem name="Penyakit" id="penyakit_menu_act" parent="data_medis_categ"
             action="cdn_penyakit_action" sequence="3"/>
     </data>
 </odoo>

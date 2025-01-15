@@ -15,6 +15,11 @@ class Penyakit(models.Model):
     penyakit_id = fields.Char(string='Kode Penyakit', required=True, help="Masukkan kode 3 angka (contoh: A01).")
     name = fields.Char(string='Nama Penyakit', required=True)
     ciri = fields.Char(string="Ciri Umum", help="Ciri umum dari penyakit ini.")
+    keterangan = fields.Char(string='Keterangan', size=60)
+    status = fields.Selection([
+        ('Menular', 'Menular'),
+        ('Tidak Menular', 'Tidak Menular')
+    ], string='Status', required=True)
 
     @api.constrains('penyakit_id')
     def _check_penyakit_id(self):
