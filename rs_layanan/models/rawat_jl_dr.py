@@ -1,18 +1,18 @@
 from odoo import models, fields, api
-
+from odoo.exceptions import ValidationError
 class Rawat_jl_dr(models.Model):
     _name = 'cdn.rawat_jl_dr'
     _description = 'Rawat Jalan Dokter'
     _rec_name = 'no_rawat'
 
-    no_rawat = fields.Char(string='No Rawat', required=True, index=True)
-    kd_jenis_prw = fields.Many2one('cdn.jns_perawatan', string='Kode Jenis Perawatan',required=True, index=True)
+    no_rawat = fields.Char(string='No Rawat', index=True)
+    kd_jenis_prw = fields.Many2one('cdn.jns_perawatan', string='Kode Jenis Perawatan', index=True)
     kd_dokter = fields.Many2one('cdn.doctor', string='Kode Dokter', ondelete='cascade', index=True)
-    tgl_perawatan = fields.Date(string='Tanggal Perawatan', required=True)
-    jam_rawat = fields.Float(string='Jam Rawat', required=True, help="Gunakan format jam desimal (contoh: 14.30 untuk 14:30)")
-    material = fields.Float(string='Material', required=True)
-    bhp = fields.Float(string='BHP', required=True)
-    tarif_tindakandr = fields.Float(string='Tarif Tindakan Dokter', required=True)
+    tgl_perawatan = fields.Date(string='Tanggal Perawatan')
+    jam_rawat = fields.Float(string='Jam Rawat', help="Gunakan format jam desimal (contoh: 14.30 untuk 14:30)")
+    material = fields.Float(string='Material')
+    bhp = fields.Float(string='BHP')
+    tarif_tindakandr = fields.Float(string='Tarif Tindakan Dokter')
     kso = fields.Float(string='KSO')
     menejemen = fields.Float(string='Manajemen')
     biaya_rawat = fields.Float(string='Biaya Rawat')

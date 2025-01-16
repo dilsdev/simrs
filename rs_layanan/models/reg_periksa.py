@@ -1,12 +1,14 @@
 from odoo import models, fields, api
-
-class Reg_periksa(models.Model):
+from odoo.exceptions import ValidationError
+from datetime import datetime
+class RegPeriksa(models.Model):
     _name = 'cdn.reg_periksa'
     _description = 'Registrasi Pemeriksaan'
     _rec_name = 'no_rawat'
 
-    no_reg = fields.Char(string='No Registrasi', size=8)
-    no_rawat = fields.Char(string='No Rawat', size=17, required=True, index=True)
+    no_reg = fields.Char(string='No Registrasi', required=False) 
+    cacat_id = fields.Char(string='ID Cacat', required=True, copy=False, readonly=True, default='CCT/20XX/XXX')
+    no_rawat = fields.Char(string='No Rawat', required=True, index=True)
     tgl_registrasi = fields.Date(string='Tanggal Registrasi')
     jam_reg = fields.Float(string='Jam Registrasi', help="Gunakan format desimal untuk jam, misalnya 13.30 untuk 13:30.")
     kd_dokter = fields.Many2one('cdn.doctor', string='Kode Dokter', ondelete='cascade', index=True)
@@ -17,35 +19,41 @@ class Reg_periksa(models.Model):
     hubunganpj = fields.Char(string='Hubungan dengan Penanggung Jawab', readonly=True)
     biaya_reg = fields.Float(string='Biaya Registrasi')
     stts = fields.Selection([
-    ('Belum', 'Belum'),
-    ('Sudah', 'Sudah'),
-    ('Batal', 'Batal'),
-    ('Berkas Diterima', 'Berkas Diterima'),
-    ('Dirujuk', 'Dirujuk'),
-    ('Meninggal', 'Meninggal'),
-    ('Dirawat', 'Dirawat'),
-    ('Pulang Paksa', 'Pulang Paksa')
+        ('Belum', 'Belum'),
+        ('Sudah', 'Sudah'),
+        ('Batal', 'Batal'),
+        ('Berkas Diterima', 'Berkas Diterima'),
+        ('Dirujuk', 'Dirujuk'),
+        ('Meninggal', 'Meninggal'),
+        ('Dirawat', 'Dirawat'),
+        ('Pulang Paksa', 'Pulang Paksa')
     ], string='Status', default='Belum')
+    
     stts_daftar = fields.Selection([
         ('-', '-'),
         ('Lama', 'Lama'),
         ('Baru', 'Baru')
     ], string='Status Daftar', required=True)
+    
     status_lanjut = fields.Selection([
         ('Ralan', 'Rawat Jalan'),
         ('Ranap', 'Rawat Inap')
     ], string='Status Lanjut', required=True, index=True)
+    
     kd_pj = fields.Many2one('cdn.penanggung_jawab', string='Kode Penjamin', ondelete='cascade', index=True)
     umurdaftar = fields.Integer(string='Umur Daftar')
+    
     sttsumur = fields.Selection([
         ('Th', 'Tahun'),
         ('Bl', 'Bulan'),
         ('Hr', 'Hari')
     ], string='Status Umur')
+    
     status_bayar = fields.Selection([
         ('Sudah Bayar', 'Sudah Bayar'),
         ('Belum Bayar', 'Belum Bayar')
     ], string='Status Bayar', required=True, index=True)
+    
     status_poli = fields.Selection([
         ('Lama', 'Lama'),
         ('Baru', 'Baru')
@@ -89,15 +97,37 @@ class Reg_periksa(models.Model):
 
     @api.model
     def create(self, vals):
+        # Pastikan no_rawat diisi
+        if not vals.get('no_rawat'):
+            raise ValidationError("No Rawat wajib diisi. a")
+
         # Membuat record di 'cdn.reg_periksa' terlebih dahulu
-        reg_periksa = super(Reg_periksa, self).create(vals)
+        reg_periksa = super(RegPeriksa, self).create(vals)
 
         # Membuat record baru di 'cdn.rawat_jalan' setelah 'cdn.reg_periksa' berhasil dibuat
         self.env['cdn.rawat_jalan'].create({
-            'no_rawat': reg_periksa.id,  # Menggunakan ID dari 'cdn.reg_periksa'
+            'no_rawat': vals.get('no_rawat'),  # Menggunakan ID dari 'cdn.reg_periksa'
             'kd_dokter': reg_periksa.kd_dokter.id,
             'no_rkm_medis': reg_periksa.no_rkm_medis.id,
             'pasien': reg_periksa.no_rkm_medis.name,  # Nama pasien diambil dari 'cdn.pasien'
         })
 
         return reg_periksa
+    @api.model
+    def create(self, vals):
+        if vals.get('cacat_id', 'Baru') == 'Baru':
+            current_year = datetime.now().year
+            last_record = self.search([('cacat_id', 'like', f'CCT/{current_year}/%')], order='id desc', limit=1)
+
+            if last_record:
+                last_id = last_record.cacat_id
+                try:
+                    last_number = int(last_id.split('/')[-1])
+                    new_number = last_number + 1
+                except ValueError:
+                    new_number = 1
+            else:
+                new_number = 1
+
+            vals['cacat_id'] = f'CCT/{current_year}/{new_number:03d}'
+        return super(Cacat_fisik, self).create(vals)

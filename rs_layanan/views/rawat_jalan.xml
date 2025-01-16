@@ -1,62 +1,346 @@
+<?xml version="1.0" encoding="utf-8"?>
 <odoo>
-    <data>
-        <!-- list View -->
-        <record id="view_rawat_jalan_list" model="ir.ui.view">
-            <field name="name">cdn.rawat_jalan.list</field>
-            <field name="model">cdn.rawat_jalan</field>
-            <field name="arch" type="xml">
-                <list string="Rawat Jalan">
-                    <field name="no_rawat"/>
-                    <field name="kd_dokter"/>
-                    <field name="no_rkm_medis"/>
-                    <field name="pasien"/>
-                </list>
-            </field>
-        </record>
+    <!-- list View Rawat Jalan Perawat -->
+    <record id="view_cdn_rawat_jl_pr_list" model="ir.ui.view">
+        <field name="name">cdn.rawat.jl.pr.list</field>
+        <field name="model">cdn.rawat_jalan</field>
+        <field name="arch" type="xml">
+            <list string="Rawat Jalan Perawat" decoration-danger="rawat_jl_pr_stts_bayar=='Belum'"
+                decoration-success="rawat_jl_pr_stts_bayar=='Sudah'"
+                decoration-warning="rawat_jl_pr_stts_bayar=='Suspen'">
+                <field name="rawat_jl_pr_no_rawat" />
+                <field name="rawat_jl_pr_nip" />
+                <field name="rawat_jl_pr_tgl_perawatan" />
+                <field name="rawat_jl_pr_jam_rawat" widget="float_time" />
+                <field name="rawat_jl_pr_biaya_rawat" sum="Total Biaya" />
+                <field name="rawat_jl_pr_stts_bayar" />
+            </list>
+        </field>
+    </record>
 
-        <!-- Form View -->
-        <record id="view_rawat_jalan_form" model="ir.ui.view">
-            <field name="name">cdn.rawat_jalan.form</field>
-            <field name="model">cdn.rawat_jalan</field>
-            <field name="arch" type="xml">
-                <form string="Rawat Jalan">
-                    <sheet>
+    <!-- Form View Rawat Jalan -->
+    <record id="view_cdn_rawat_jalan_form" model="ir.ui.view">
+        <field name="name">cdn.rawat.jalan.form</field>
+        <field name="model">cdn.rawat_jalan</field>
+        <field name="arch" type="xml">
+            <form string="Rawat Jalan">
+                <header>
+                    <button name="action_confirm" type="object" string="Konfirmasi Pembayaran"
+                        class="oe_highlight" invisible="rawat_jl_pr_stts_bayar != 'Belum'" />
+                    <button name="action_cancel" type="object" string="Batalkan Pembayaran"
+                        class="oe_highlight" invisible="rawat_jl_pr_stts_bayar != 'Sudah'" />
+                    <field name="rawat_jl_pr_stts_bayar" widget="statusbar"
+                        statusbar_visible="Belum,Sudah,Suspen" options="{'clickable': true}" />
+                </header>
+                <sheet>
+                    <div class="oe_title">
+                        <h1>
+                            <field name="no_rawat" />
+                        </h1>
+                    </div>
+                    <group>
                         <group>
-                            <field name="no_rawat"/>
-                    <field name="kd_dokter"/>
-                    <field name="no_rkm_medis"/>
-                    <field name="pasien"/>
+                            <field name="kd_dokter" />
                         </group>
-                    </sheet>
-                </form>
-            </field>
-        </record>
+                        <group>
+                            <field name="no_rkm_medis" />
+                            <field name="pasien" />
+                        </group>
+                    </group>
+                    <notebook>
+                        <!-- Tab Tindakan Perawat -->
+                        <page string="Tindakan Perawat" name="tindakan_perawat">
+                            <group>
+                                <group string="Informasi Dasar">
+                                    <field name="rawat_jl_pr_no_rawat" />
+                                    <field name="rawat_jl_pr_nip" />
+                                    <field name="rawat_jl_pr_kd_jenis_prw" />
+                                </group>
+                                <group string="Waktu Tindakan">
+                                    <field name="rawat_jl_pr_tgl_perawatan" />
+                                    <field name="rawat_jl_pr_jam_rawat" widget="float_time" />
+                                </group>
+                            </group>
+                            <group string="Rincian Biaya">
+                                <group>
+                                    <field name="rawat_jl_pr_material" />
+                                    <field name="rawat_jl_pr_bhp" />
+                                    <field name="rawat_jl_pr_tarif_tindakanpr" />
+                                </group>
+                                <group>
+                                    <field name="rawat_jl_pr_kso" />
+                                    <field name="rawat_jl_pr_menejemen" />
+                                    <field name="rawat_jl_pr_biaya_rawat" sum="Total" />
+                                </group>
+                            </group>
+                        </page>
 
-        <!-- Search View -->
-        <record id="view_rawat_jalan_search" model="ir.ui.view">
-            <field name="name">cdn.rawat_jalan.search</field>
-            <field name="model">cdn.rawat_jalan</field>
-            <field name="arch" type="xml">
-                <search string="Rawat Jalan">
-                   <field name="no_rawat"/>
-                    <field name="kd_dokter"/>
-                    <field name="no_rkm_medis"/>
-                    <field name="pasien"/>
-                    <!-- <filter string="Draft" name="draft" domain="[('state', '=', 'draft')]"/>
-                    <filter string="Confirmed" name="confirmed" domain="[('state', '=', 'confirmed')]"/> -->
-                </search>
-            </field>
-        </record>
+                        <!-- Tab Pemeriksaan -->
+                        <page string="Pemeriksaan" name="pemeriksaan">
+                            <group>
+                                <group string="Vital Signs">
+                                    <field name="pemeriksaan_ralan_suhu_tubuh" />
+                                    <field name="pemeriksaan_ralan_tensi" />
+                                    <field name="pemeriksaan_ralan_nadi" />
+                                    <field name="pemeriksaan_ralan_respirasi" />
+                                    <field name="pemeriksaan_ralan_tinggi" />
+                                    <field name="pemeriksaan_ralan_berat" />
+                                    <field name="pemeriksaan_ralan_spo2" />
+                                    <field name="pemeriksaan_ralan_gcs" />
+                                </group>
+                                <group string="Status">
+                                    <field name="pemeriksaan_ralan_kesadaran" />
+                                    <field name="pemeriksaan_ralan_lingkar_perut" />
+                                </group>
+                            </group>
+                            <group string="Catatan Pemeriksaan" col="4">
+                                <field name="pemeriksaan_ralan_keluhan" colspan="4" />
+                                <field name="pemeriksaan_ralan_pemeriksaan" colspan="4" />
+                                <field name="pemeriksaan_ralan_alergi" colspan="4" />
+                                <field name="pemeriksaan_ralan_rtl" colspan="4" />
+                                <field name="pemeriksaan_ralan_penilaian" colspan="4" />
+                                <field name="pemeriksaan_ralan_instruksi" colspan="4" />
+                                <field name="pemeriksaan_ralan_evaluasi" colspan="4" />
+                            </group>
+                        </page>
 
-        <!-- Action -->
-        <record id="action_rawat_jalan" model="ir.actions.act_window">
-            <field name="name">Rawat Jalan</field>
-            <field name="res_model">cdn.rawat_jalan</field>
-            <field name="view_mode">list,form</field>
-        </record>
+                        <!-- Tab Diagnosa -->
+                        <page string="Diagnosa" name="diagnosa">
+                            <group>
+                                <group string="Informasi Diagnosa">
+                                    <field name="diagnosa_pasien_penyakit_id" />
+                                    <field name="diagnosa_pasien_status" />
+                                    <field name="diagnosa_pasien_prioritas" />
+                                    <field name="diagnosa_pasien_status_penyakit" />
+                                </group>
+                            </group>
+                        </page>
 
-        <!-- Menu -->
-        <menuitem id="menu_rawat_jalan_root" name="Rawat Jalan" sequence="10"/>
-        <menuitem id="menu_rawat_jalan" name="Rawat Jalan" parent="menu_rawat_jalan_root" action="action_rawat_jalan" sequence="10"/>
-    </data>
+                        <!-- Tab Tindakan Dokter -->
+                        <page string="Tindakan Dokter" name="tindakan_dokter">
+                            <group>
+                                <group string="Informasi Dasar">
+                                    <field name="rawat_jl_dr_no_rawat" />
+                                    <field name="rawat_jl_dr_kd_dokter" />
+                                    <field name="rawat_jl_dr_kd_jenis_prw" />
+                                </group>
+                                <group string="Waktu Tindakan">
+                                    <field name="rawat_jl_dr_tgl_perawatan" />
+                                    <field name="rawat_jl_dr_jam_rawat" widget="float_time" />
+                                </group>
+                            </group>
+                            <group string="Rincian Biaya">
+                                <group>
+                                    <field name="rawat_jl_dr_material" />
+                                    <field name="rawat_jl_dr_bhp" />
+                                    <field name="rawat_jl_dr_tarif_tindakandr" />
+                                </group>
+                                <group>
+                                    <field name="rawat_jl_dr_kso" />
+                                    <field name="rawat_jl_dr_menejemen" />
+                                    <field name="rawat_jl_dr_biaya_rawat" sum="Total" />
+                                </group>
+                            </group>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- Search View -->
+    <record id="view_cdn_rawat_jalan_search" model="ir.ui.view">
+        <field name="name">cdn.rawat.jalan.search</field>
+        <field name="model">cdn.rawat_jalan</field>
+        <field name="arch" type="xml">
+            <search string="Pencarian Rawat Jalan">
+                <field name="rawat_jl_pr_no_rawat" />
+                <field name="rawat_jl_pr_nip" />
+                <field name="pasien" />
+                <field name="kd_dokter" />
+                <separator />
+                <filter string="Belum Bayar" name="belum_bayar"
+                    domain="[('rawat_jl_pr_stts_bayar', '=', 'Belum')]" />
+                <filter string="Sudah Bayar" name="sudah_bayar"
+                    domain="[('rawat_jl_pr_stts_bayar', '=', 'Sudah')]" />
+                <filter string="Suspen" name="suspen"
+                    domain="[('rawat_jl_pr_stts_bayar', '=', 'Suspen')]" />
+                <group expand="0" string="Group By">
+                    <filter string="Status Bayar" name="group_stts_bayar"
+                        context="{'group_by': 'rawat_jl_pr_stts_bayar'}" />
+                    <filter string="Tanggal" name="group_tanggal"
+                        context="{'group_by': 'rawat_jl_pr_tgl_perawatan'}" />
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <!-- Calendar View -->
+    <record id="view_cdn_rawat_jalan_calendar" model="ir.ui.view">
+        <field name="name">cdn.rawat.jalan.calendar</field>
+        <field name="model">cdn.rawat_jalan</field>
+        <field name="arch" type="xml">
+            <calendar string="Jadwal Rawat Jalan"
+                date_start="rawat_jl_pr_tgl_perawatan"
+                color="rawat_jl_pr_stts_bayar">
+                <field name="rawat_jl_pr_no_rawat" />
+                <field name="pasien" />
+                <field name="rawat_jl_pr_nip" />
+            </calendar>
+        </field>
+    </record>
+
+    <!-- Pivot View -->
+    <record id="view_cdn_rawat_jalan_pivot" model="ir.ui.view">
+        <field name="name">cdn.rawat.jalan.pivot</field>
+        <field name="model">cdn.rawat_jalan</field>
+        <field name="arch" type="xml">
+            <pivot string="Analisis Rawat Jalan">
+                <field name="rawat_jl_pr_tgl_perawatan" type="row" />
+                <field name="rawat_jl_pr_stts_bayar" type="col" />
+                <field name="rawat_jl_pr_biaya_rawat" type="measure" />
+            </pivot>
+        </field>
+    </record>
+
+    <!-- Graph View -->
+    <record id="view_cdn_rawat_jalan_graph" model="ir.ui.view">
+        <field name="name">cdn.rawat.jalan.graph</field>
+        <field name="model">cdn.rawat_jalan</field>
+        <field name="arch" type="xml">
+            <graph string="Grafik Rawat Jalan">
+                <field name="rawat_jl_pr_tgl_perawatan" />
+                <field name="rawat_jl_pr_biaya_rawat" type="measure" />
+            </graph>
+        </field>
+    </record>
+
+    <!-- Kanban View -->
+    <record id="view_cdn_rawat_jalan_kanban" model="ir.ui.view">
+        <field name="name">cdn.rawat.jalan.kanban</field>
+        <field name="model">cdn.rawat_jalan</field>
+        <field name="arch" type="xml">
+            <kanban class="o_kanban_mobile">
+                <field name="rawat_jl_pr_no_rawat" />
+                <field name="pasien" />
+                <field name="rawat_jl_pr_tgl_perawatan" />
+                <field name="rawat_jl_pr_stts_bayar" />
+                <field name="rawat_jl_pr_biaya_rawat" />
+                <templates>
+                    <t t-name="kanban-box">
+                        <div t-attf-class="oe_kanban_card oe_kanban_global_click">
+                            <div class="row">
+                                <div class="col-6">
+                                    <strong>
+                                        <span>
+                                            <t t-esc="record.rawat_jl_pr_no_rawat.value" />
+                                        </span>
+                                    </strong>
+                                </div>
+                                <div class="col-6 text-right">
+                                    <span class="badge badge-pill badge-info">
+                                        <t t-esc="record.rawat_jl_pr_stts_bayar.value" />
+                                    </span>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-12">
+                                    <span>
+                                        <t t-esc="record.pasien.value" />
+                                    </span>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-6">
+                                    <span>
+                                        <t t-esc="record.rawat_jl_pr_tgl_perawatan.value" />
+                                    </span>
+                                </div>
+                                <div class="col-6 text-right">
+                                    <span>
+                                        <t t-esc="record.rawat_jl_pr_biaya_rawat.value" />
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
+    <!-- Action Window -->
+    <record id="action_cdn_rawat_jalan" model="ir.actions.act_window">
+        <field name="name">Rawat Jalan</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">cdn.rawat_jalan</field>
+        <field name="view_mode">list,form,calendar,pivot,graph,kanban</field>
+        <field name="context">{'search_default_belum_bayar': 1}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Buat catatan rawat jalan pertama Anda
+            </p>
+            <p>
+                Buat catatan rawat jalan untuk mengelola kunjungan pasien.
+            </p>
+        </field>
+    </record>
+
+    <!-- Menu Items -->
+    <menuitem id="menu_cdn_rawat_jalan_root"
+        name="Rawat Jalan"
+        sequence="10" />
+
+    <menuitem id="menu_cdn_rawat_jalan_main"
+        name="Rawat Jalan"
+        parent="menu_cdn_rawat_jalan_root"
+        sequence="10" />
+
+    <menuitem id="menu_cdn_rawat_jalan_action"
+        name="Rawat Jalan"
+        parent="menu_cdn_rawat_jalan_main"
+        action="action_cdn_rawat_jalan"
+        sequence="10" />
+
+    <!-- Security -->
+    <record id="module_category_cdn_rawat_jalan" model="ir.module.category">
+        <field name="name">Rawat Jalan</field>
+        <field name="description">Kategori untuk modul Rawat Jalan</field>
+        <field name="sequence">20</field>
+    </record>
+
+    <record id="group_cdn_rawat_jalan_user" model="res.groups">
+        <field name="name">User</field>
+        <field name="category_id" ref="module_category_cdn_rawat_jalan" />
+    </record>
+
+    <record id="group_cdn_rawat_jalan_manager" model="res.groups">
+        <field name="name">Manager</field>
+        <field name="category_id" ref="module_category_cdn_rawat_jalan" />
+        <field name="implied_ids" eval="[(4, ref('group_cdn_rawat_jalan_user'))]" />
+    </record>
+
+    <!-- Rule untuk Rawat Jalan -->
+    <record id="cdn_rawat_jalan_user_rule" model="ir.rule">
+        <field name="name">Rawat Jalan User Rule</field>
+        <field name="model_id" ref="model_cdn_rawat_jalan" />
+        <field name="domain_force">[('create_uid','=',user.id)]</field>
+        <field name="groups" eval="[(4, ref('group_cdn_rawat_jalan_user'))]" />
+        <field name="perm_read" eval="True" />
+        <field name="perm_write" eval="True" />
+        <field name="perm_create" eval="True" />
+        <field name="perm_unlink" eval="False" />
+    </record>
+
+    <record id="cdn_rawat_jalan_manager_rule" model="ir.rule">
+        <field name="name">Rawat Jalan Manager Rule</field>
+        <field name="model_id" ref="model_cdn_rawat_jalan" />
+        <field name="domain_force">[(1,'=',1)]</field>
+        <field name="groups" eval="[(4, ref('group_cdn_rawat_jalan_manager'))]" />
+        <field name="perm_read" eval="True" />
+        <field name="perm_write" eval="True" />
+        <field name="perm_create" eval="True" />
+        <field name="perm_unlink" eval="True" />
+    </record>
+
 </odoo>

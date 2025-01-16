@@ -25,6 +25,4 @@ class Diagnosa_pasien(models.Model):
     # Relasi dengan model penyakit
     penyakit_id = fields.Many2one('cdn.penyakit', string='Kode Penyakit', ondelete='cascade', required=True)
 
-    _sql_constraints = [
-        ('diagnosa_pasien_unique', 'unique(no_rawat, status)', 'The combination of No Rawat, Kd Penyakit, and Status must be unique.')
-    ]
+

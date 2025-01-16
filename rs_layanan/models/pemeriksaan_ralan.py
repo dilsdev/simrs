@@ -1,43 +1,43 @@
 from odoo import models, fields, api
-
+from odoo.exceptions import ValidationError
 class Pemeriksaan_ralan(models.Model):
     _name = 'cdn.pemeriksaan_ralan'
     _description = 'Pemeriksaan Rawat Jalan'
     _rec_name = 'no_rawat'
 
-    no_rawat = fields.Char(string='No Rawat', required=True, index=True)
-    tgl_perawatan = fields.Date(string='Tanggal Perawatan', required=True)
-    jam_rawat = fields.Float(string='Jam Rawat', required=True, help="Gunakan format jam desimal (contoh: 14.30 untuk 14:30)")
+    no_rawat = fields.Char(string='No Rawat', index=True)
+    tgl_perawatan = fields.Date(string='Tanggal Perawatan')
+    jam_rawat = fields.Float(string='Jam Rawat', help="Gunakan format jam desimal (contoh: 14.30 untuk 14:30)")
     suhu_tubuh = fields.Char(string='Suhu Tubuh', size=5)
-    tensi = fields.Char(string='Tensi', size=8, required=True)
+    tensi = fields.Char(string='Tensi', size=8)
     nadi = fields.Char(string='Nadi', size=3)
     respirasi = fields.Char(string='Respirasi', size=3)
     tinggi = fields.Char(string='Tinggi', size=5)
     berat = fields.Char(string='Berat', size=5)
-    spo2 = fields.Char(string='SPO2', size=3, required=True)
+    spo2 = fields.Char(string='SPO2', size=3)
     gcs = fields.Char(string='GCS', size=10)
     kesadaran = fields.Selection([
-        ('Compos Mentis', 'Compos Mentis'),
-        ('Somnolence', 'Somnolence'),
-        ('Sopor', 'Sopor'),
-        ('Coma', 'Coma'),
-        ('Alert', 'Alert'),
-        ('Confusion', 'Confusion'),
-        ('Voice', 'Voice'),
-        ('Pain', 'Pain'),
-        ('Unresponsive', 'Unresponsive'),
-        ('Apatis', 'Apatis'),
-        ('Delirium', 'Delirium'),
-    ], string='Kesadaran', required=True)
+        ('Compos Mentis', 'Compos Mentis / Sadar dan berfungsi normal'),
+        ('Somnolence', 'Somnolence / Mengantuk, tetapi dapat dibangunkan'),
+        ('Sopor', 'Sopor / Tidur yang dalam, sulit dibangunkan'),
+        ('Coma', 'Coma / Tidak sadar, tidak responsif'),
+        ('Alert', 'Alert / Sadar dan responsif'),
+        ('Confusion', 'Confusion / Bingung, tidak dapat berfungsi dengan baik'),
+        ('Voice', 'Voice / Responsif terhadap suara'),
+        ('Pain', 'Pain / Responsif terhadap rasa sakit'),
+        ('Unresponsive', 'Unresponsive / Tidak responsif sama sekali'),
+        ('Apatis', 'Apatis / Tidak peduli, tidak ada respons emosional'),
+        ('Delirium', 'Delirium / Kebingungan akut, perubahan kesadaran'),
+    ], string='Kesadaran')
     keluhan = fields.Text(string='Keluhan', size=2000)
     pemeriksaan = fields.Text(string='Pemeriksaan', size=2000)
     alergi = fields.Char(string='Alergi', size=80)
     lingkar_perut = fields.Char(string='Lingkar Perut', size=5)
-    rtl = fields.Text(string='RTL', required=True, size=2000)
-    penilaian = fields.Text(string='Penilaian', required=True, size=2000)
-    instruksi = fields.Text(string='Instruksi', required=True, size=2000)
-    evaluasi = fields.Text(string='Evaluasi', required=True, size=2000)
-    nip = fields.Char(string='NIP', required=True, index=True)
+    rtl = fields.Text(string='RTL', size=2000)
+    penilaian = fields.Text(string='Penilaian', size=2000)
+    instruksi = fields.Text(string='Instruksi', size=2000)
+    evaluasi = fields.Text(string='Evaluasi', size=2000)
+    nip = fields.Char(string='NIP', index=True)
 
     _sql_constraints = [
         ('pemeriksaan_ralan_uniq', 'unique(no_rawat, tgl_perawatan, jam_rawat)', 'Kombinasi No Rawat, Tanggal Perawatan, dan Jam Rawat harus unik!')
@@ -66,8 +66,8 @@ class Pemeriksaan_ralan(models.Model):
     @api.model
     def create(self, vals):
         # Logika tambahan jika diperlukan saat membuat record baru
-        return super(PemeriksaanRalan, self).create(vals)
+        return super(Pemeriksaan_ralan, self).create(vals)
 
     def write(self, vals):
         # Logika tambahan jika diperlukan saat mengupdate record
-        return super(PemeriksaanRalan, self).write(vals)
+        return super(Pemeriksaan_ralan, self).write(vals)
