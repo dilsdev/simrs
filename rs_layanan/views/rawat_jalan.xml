@@ -1,26 +1,26 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <!-- list View Rawat Jalan Perawat -->
-    <record id="view_cdn_rawat_jl_pr_list" model="ir.ui.view">
-        <field name="name">cdn.rawat.jl.pr.list</field>
+    <record id="view_cdn_rawat_jalan_list" model="ir.ui.view">
+        <field name="name">cdn.rawat_jalan.list</field>
         <field name="model">cdn.rawat_jalan</field>
         <field name="arch" type="xml">
-            <list string="Rawat Jalan Perawat" decoration-danger="rawat_jl_pr_stts_bayar=='Belum'"
-                decoration-success="rawat_jl_pr_stts_bayar=='Sudah'"
-                decoration-warning="rawat_jl_pr_stts_bayar=='Suspen'">
-                <field name="rawat_jl_pr_no_rawat" />
-                <field name="rawat_jl_pr_nip" />
-                <field name="rawat_jl_pr_tgl_perawatan" />
-                <field name="rawat_jl_pr_jam_rawat" widget="float_time" />
-                <field name="rawat_jl_pr_biaya_rawat" sum="Total Biaya" />
-                <field name="rawat_jl_pr_stts_bayar" />
+            <!-- <list string="Rawat Jalan Perawat"
+            decoration-danger="rawat_jalan_stts_bayar=='Belum'"
+                decoration-success="rawat_jalan_stts_bayar=='Sudah'"
+                decoration-warning="rawat_jalan_stts_bayar=='Suspen'"> -->
+            <list string="Rawat Jalan Perawat">
+                <field name="no_rawat" />
+                <field name="kd_dokter" />
+                <field name="no_rkm_medis" />
+                <field name="pasien" />
             </list>
         </field>
     </record>
 
     <!-- Form View Rawat Jalan -->
     <record id="view_cdn_rawat_jalan_form" model="ir.ui.view">
-        <field name="name">cdn.rawat.jalan.form</field>
+        <field name="name">cdn.rawat_jalan.form</field>
         <field name="model">cdn.rawat_jalan</field>
         <field name="arch" type="xml">
             <form string="Rawat Jalan">
@@ -150,7 +150,7 @@
 
     <!-- Search View -->
     <record id="view_cdn_rawat_jalan_search" model="ir.ui.view">
-        <field name="name">cdn.rawat.jalan.search</field>
+        <field name="name">cdn.rawat_jalan.search</field>
         <field name="model">cdn.rawat_jalan</field>
         <field name="arch" type="xml">
             <search string="Pencarian Rawat Jalan">
@@ -159,8 +159,10 @@
                 <field name="pasien" />
                 <field name="kd_dokter" />
                 <separator />
+                <filter string="Semua" name="semua" domain="[]" />
                 <filter string="Belum Bayar" name="belum_bayar"
                     domain="[('rawat_jl_pr_stts_bayar', '=', 'Belum')]" />
+
                 <filter string="Sudah Bayar" name="sudah_bayar"
                     domain="[('rawat_jl_pr_stts_bayar', '=', 'Sudah')]" />
                 <filter string="Suspen" name="suspen"
@@ -177,7 +179,7 @@
 
     <!-- Calendar View -->
     <record id="view_cdn_rawat_jalan_calendar" model="ir.ui.view">
-        <field name="name">cdn.rawat.jalan.calendar</field>
+        <field name="name">cdn.rawat_jalan.calendar</field>
         <field name="model">cdn.rawat_jalan</field>
         <field name="arch" type="xml">
             <calendar string="Jadwal Rawat Jalan"
@@ -192,7 +194,7 @@
 
     <!-- Pivot View -->
     <record id="view_cdn_rawat_jalan_pivot" model="ir.ui.view">
-        <field name="name">cdn.rawat.jalan.pivot</field>
+        <field name="name">cdn.rawat_jalan.pivot</field>
         <field name="model">cdn.rawat_jalan</field>
         <field name="arch" type="xml">
             <pivot string="Analisis Rawat Jalan">
@@ -205,7 +207,7 @@
 
     <!-- Graph View -->
     <record id="view_cdn_rawat_jalan_graph" model="ir.ui.view">
-        <field name="name">cdn.rawat.jalan.graph</field>
+        <field name="name">cdn.rawat_jalan.graph</field>
         <field name="model">cdn.rawat_jalan</field>
         <field name="arch" type="xml">
             <graph string="Grafik Rawat Jalan">
@@ -217,7 +219,7 @@
 
     <!-- Kanban View -->
     <record id="view_cdn_rawat_jalan_kanban" model="ir.ui.view">
-        <field name="name">cdn.rawat.jalan.kanban</field>
+        <field name="name">cdn.rawat_jalan.kanban</field>
         <field name="model">cdn.rawat_jalan</field>
         <field name="arch" type="xml">
             <kanban class="o_kanban_mobile">
@@ -275,7 +277,7 @@
         <field name="type">ir.actions.act_window</field>
         <field name="res_model">cdn.rawat_jalan</field>
         <field name="view_mode">list,form,calendar,pivot,graph,kanban</field>
-        <field name="context">{'search_default_belum_bayar': 1}</field>
+        <field name="context">{'search_default_semua': 1}</field>
         <field name="help" type="html">
             <p class="o_view_nocontent_smiling_face">
                 Buat catatan rawat jalan pertama Anda
@@ -302,7 +304,7 @@
         action="action_cdn_rawat_jalan"
         sequence="10" />
 
-    <!-- Security -->
+    <!-- Security
     <record id="module_category_cdn_rawat_jalan" model="ir.module.category">
         <field name="name">Rawat Jalan</field>
         <field name="description">Kategori untuk modul Rawat Jalan</field>
@@ -320,11 +322,10 @@
         <field name="implied_ids" eval="[(4, ref('group_cdn_rawat_jalan_user'))]" />
     </record>
 
-    <!-- Rule untuk Rawat Jalan -->
     <record id="cdn_rawat_jalan_user_rule" model="ir.rule">
         <field name="name">Rawat Jalan User Rule</field>
         <field name="model_id" ref="model_cdn_rawat_jalan" />
-        <field name="domain_force">[('create_uid','=',user.id)]</field>
+        <field name="domain_force">[('1','=',1)]</field>
         <field name="groups" eval="[(4, ref('group_cdn_rawat_jalan_user'))]" />
         <field name="perm_read" eval="True" />
         <field name="perm_write" eval="True" />
@@ -341,6 +342,6 @@
         <field name="perm_write" eval="True" />
         <field name="perm_create" eval="True" />
         <field name="perm_unlink" eval="True" />
-    </record>
+    </record> -->
 
 </odoo>

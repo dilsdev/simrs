@@ -1,5 +1,7 @@
 from odoo import models, fields, api
 from odoo.exceptions import ValidationError
+import logging
+_logger = logging.getLogger(__name__)
 from datetime import datetime
 class RegPeriksa(models.Model):
     _name = 'cdn.reg_periksa'
@@ -7,8 +9,7 @@ class RegPeriksa(models.Model):
     _rec_name = 'no_rawat'
 
     no_reg = fields.Char(string='No Registrasi', required=False) 
-    cacat_id = fields.Char(string='ID Cacat', required=True, copy=False, readonly=True, default='CCT/20XX/XXX')
-    no_rawat = fields.Char(string='No Rawat', required=True, index=True)
+    no_rawat = fields.Char(string='No Rawat', required=True, copy=False, readonly=True, default='RWT/20XX/XXX', index=True)
     tgl_registrasi = fields.Date(string='Tanggal Registrasi')
     jam_reg = fields.Float(string='Jam Registrasi', help="Gunakan format desimal untuk jam, misalnya 13.30 untuk 13:30.")
     kd_dokter = fields.Many2one('cdn.doctor', string='Kode Dokter', ondelete='cascade', index=True)
@@ -97,30 +98,12 @@ class RegPeriksa(models.Model):
 
     @api.model
     def create(self, vals):
-        # Pastikan no_rawat diisi
-        if not vals.get('no_rawat'):
-            raise ValidationError("No Rawat wajib diisi. a")
-
-        # Membuat record di 'cdn.reg_periksa' terlebih dahulu
-        reg_periksa = super(RegPeriksa, self).create(vals)
-
-        # Membuat record baru di 'cdn.rawat_jalan' setelah 'cdn.reg_periksa' berhasil dibuat
-        self.env['cdn.rawat_jalan'].create({
-            'no_rawat': vals.get('no_rawat'),  # Menggunakan ID dari 'cdn.reg_periksa'
-            'kd_dokter': reg_periksa.kd_dokter.id,
-            'no_rkm_medis': reg_periksa.no_rkm_medis.id,
-            'pasien': reg_periksa.no_rkm_medis.name,  # Nama pasien diambil dari 'cdn.pasien'
-        })
-
-        return reg_periksa
-    @api.model
-    def create(self, vals):
-        if vals.get('cacat_id', 'Baru') == 'Baru':
+        if vals.get('no_rawat', 'Baru') == 'Baru':
             current_year = datetime.now().year
-            last_record = self.search([('cacat_id', 'like', f'CCT/{current_year}/%')], order='id desc', limit=1)
+            last_record = self.search([('no_rawat', 'like', f'RWT/{current_year}/%')], order='id desc', limit=1)
 
             if last_record:
-                last_id = last_record.cacat_id
+                last_id = last_record.no_rawat
                 try:
                     last_number = int(last_id.split('/')[-1])
                     new_number = last_number + 1
@@ -129,5 +112,20 @@ class RegPeriksa(models.Model):
             else:
                 new_number = 1
 
-            vals['cacat_id'] = f'CCT/{current_year}/{new_number:03d}'
-        return super(Cacat_fisik, self).create(vals)
+            vals['no_rawat'] = f'RWT/{current_year}/{new_number:03d}'
+
+        # Buat record di cdn.reg_periksa
+        reg_periksa = super(RegPeriksa, self).create(vals)
+
+        # Gunakan ID dari reg_periksa untuk no_rawat di cdn.rawat_jalan
+        self.env['cdn.rawat_jalan'].create({
+            'id_reg_periksa':self.id,
+            'diagnosa_pasien_reg_periksa_id':self.id,
+            'no_rawat': reg_periksa.no_rawat,  
+            'kd_dokter': reg_periksa.kd_dokter.id,
+            'no_rkm_medis': reg_periksa.no_rkm_medis.id,
+            'pasien': reg_periksa.no_rkm_medis.name,  
+        })
+
+        return reg_periksa
+
