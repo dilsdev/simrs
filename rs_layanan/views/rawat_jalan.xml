@@ -34,6 +34,7 @@
                 </header>
                 <sheet>
                     <div class="oe_title">
+                        <label for="no_rawat" string="No Rawat" />
                         <h1>
                             <field name="no_rawat" />
                         </h1>
@@ -43,7 +44,6 @@
                             <field name="kd_dokter" />
                         </group>
                         <group>
-                            <field name="no_rkm_medis" />
                             <field name="pasien" />
                         </group>
                     </group>
@@ -52,7 +52,7 @@
                         <page string="Tindakan Perawat" name="tindakan_perawat">
                             <group>
                                 <group string="Informasi Dasar">
-                                    <field name="rawat_jl_pr_no_rawat" />
+                                    <!-- <field name="rawat_jl_pr_no_rawat" /> -->
                                     <field name="rawat_jl_pr_nip" />
                                     <field name="rawat_jl_pr_kd_jenis_prw" />
                                 </group>
@@ -79,28 +79,36 @@
                         <page string="Pemeriksaan" name="pemeriksaan">
                             <group>
                                 <group string="Vital Signs">
-                                    <field name="pemeriksaan_ralan_suhu_tubuh" />
-                                    <field name="pemeriksaan_ralan_tensi" />
-                                    <field name="pemeriksaan_ralan_nadi" />
-                                    <field name="pemeriksaan_ralan_respirasi" />
-                                    <field name="pemeriksaan_ralan_tinggi" />
-                                    <field name="pemeriksaan_ralan_berat" />
-                                    <field name="pemeriksaan_ralan_spo2" />
-                                    <field name="pemeriksaan_ralan_gcs" />
+                                    <group>
+                                        <field name="pemeriksaan_ralan_suhu_tubuh" />
+                                        <field name="pemeriksaan_ralan_tensi" />
+                                        <field name="pemeriksaan_ralan_nadi" />
+                                        <field name="pemeriksaan_ralan_respirasi" />
+                                    </group>
+                                    <group>
+                                        <field name="pemeriksaan_ralan_tinggi" />
+                                        <field name="pemeriksaan_ralan_berat" />
+                                        <field name="pemeriksaan_ralan_spo2" />
+                                        <field name="pemeriksaan_ralan_gcs" />
+                                    </group>
                                 </group>
                                 <group string="Status">
                                     <field name="pemeriksaan_ralan_kesadaran" />
                                     <field name="pemeriksaan_ralan_lingkar_perut" />
                                 </group>
                             </group>
-                            <group string="Catatan Pemeriksaan" col="4">
-                                <field name="pemeriksaan_ralan_keluhan" colspan="4" />
-                                <field name="pemeriksaan_ralan_pemeriksaan" colspan="4" />
-                                <field name="pemeriksaan_ralan_alergi" colspan="4" />
-                                <field name="pemeriksaan_ralan_rtl" colspan="4" />
-                                <field name="pemeriksaan_ralan_penilaian" colspan="4" />
-                                <field name="pemeriksaan_ralan_instruksi" colspan="4" />
-                                <field name="pemeriksaan_ralan_evaluasi" colspan="4" />
+                            <group string="Catatan Pemeriksaan">
+                                <group>
+                                    <field name="pemeriksaan_ralan_keluhan" />
+                                    <field name="pemeriksaan_ralan_pemeriksaan" />
+                                    <field name="pemeriksaan_ralan_alergi" />
+                                    <field name="pemeriksaan_ralan_rtl" />
+                                </group>
+                                <group>
+                                    <field name="pemeriksaan_ralan_penilaian" />
+                                    <field name="pemeriksaan_ralan_instruksi" />
+                                    <field name="pemeriksaan_ralan_evaluasi" />
+                                </group>
                             </group>
                         </page>
 

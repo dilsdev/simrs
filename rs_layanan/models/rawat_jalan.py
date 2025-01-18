@@ -16,13 +16,8 @@ class Rawat_jalan(models.Model):
     no_rkm_medis = fields.Many2one('cdn.pasien', string='Rekam Medis', readonly=True, store=True)
     pasien = fields.Char(string='Pasien', readonly=True, store=True)
 
-    @api.onchange('id_reg_periksa')
-    def _onchange_id_reg_periksa(self):
-        if self.id_reg_periksa:
-            self.kd_dokter = self.id_reg_periksa.kd_dokter
-            self.no_rkm_medis = self.id_reg_periksa.no_rkm_medis
-            self.pasien = self.no_rkm_medis.name
-            self.diagnosa_pasien_reg_periksa_id = self.id_reg_periksa.id
+    
+
 
     # Rawat Jalan DR Fields
     rawat_jl_dr_no_rawat = fields.Char(string='No Rawat', index=True)
@@ -106,106 +101,141 @@ class Rawat_jalan(models.Model):
         ('Lama', 'Lama'),
         ('Baru', 'Baru')
     ], string='Status Penyakit', default='Baru')
-    diagnosa_pasien_reg_periksa_id = fields.Many2one('reg.periksa', string='No Rawat', ondelete='cascade', default=0)
-    diagnosa_pasien_penyakit_id = fields.Many2one('cdn.penyakit', string='Kode Penyakit', ondelete='cascade', default=0)
-
+    diagnosa_pasien_reg_periksa_id = fields.Many2one('cdn.reg_periksa', string='No Rawat')
+    diagnosa_pasien_penyakit_id = fields.Many2many('cdn.penyakit', string='Kode Penyakit')
+    
+    @api.onchange('id_reg_periksa')
+    def _onchange_id_reg_periksa(self):
+        for record in self:
+            if record.id_reg_periksa:
+                record.update({
+                    'kd_dokter': record.id_reg_periksa.kd_dokter.id if record.id_reg_periksa.kd_dokter else False,
+                    'no_rkm_medis': record.id_reg_periksa.no_rkm_medis.id if record.id_reg_periksa.no_rkm_medis else False,
+                    'pasien': record.id_reg_periksa.no_rkm_medis.name if record.id_reg_periksa.no_rkm_medis else False,
+                    'diagnosa_pasien_reg_periksa_id': record.id_reg_periksa.id,
+                    'diagnosa_pasien_no_rawat': record.no_rawat
+            })
     def _sync_related_records(self, vals):
-            """Helper method to sync data with related tables"""
-            if not self.no_rawat:
-                return
+        """Helper method to sync data with related tables"""
+        if not self.no_rawat:
+            return
 
-            # Get related models
-            rawat_jl_dr = self.env['cdn.rawat_jl_dr'].search([('no_rawat', '=', self.no_rawat)], limit=1)
-            rawat_jl_pr = self.env['cdn.rawat_jl_pr'].search([('no_rawat', '=', self.no_rawat)], limit=1)
-            pemeriksaan_ralan = self.env['cdn.pemeriksaan_ralan'].search([('no_rawat', '=', self.no_rawat)], limit=1)
-            diagnosa_pasien = self.env['cdn.diagnosa_pasien'].search([('no_rawat', '=', self.no_rawat)], limit=1)
+        rawat_jl_dr = self.env['cdn.rawat_jl_dr'].search([('no_rawat', '=', self.no_rawat)], limit=1)
+        rawat_jl_pr = self.env['cdn.rawat_jl_pr'].search([('no_rawat', '=', self.no_rawat)], limit=1)
+        pemeriksaan_ralan = self.env['cdn.pemeriksaan_ralan'].search([('no_rawat', '=', self.no_rawat)], limit=1)
+        diagnosa_pasien = self.env['cdn.diagnosa_pasien'].search([('no_rawat', '=', self.no_rawat)], limit=1)
 
-            # Prepare values for rawat_jl_dr
-            if any(key.startswith('rawat_jl_dr_') for key in vals):
-                dr_vals = {
-                    'no_rawat': self.no_rawat,
-                    'kd_jenis_prw': vals.get('rawat_jl_dr_kd_jenis_prw', rawat_jl_dr.kd_jenis_prw.id if rawat_jl_dr else False),
-                    'kd_dokter': vals.get('rawat_jl_dr_kd_dokter', rawat_jl_dr.kd_dokter.id if rawat_jl_dr else False),
-                    'tgl_perawatan': vals.get('rawat_jl_dr_tgl_perawatan', rawat_jl_dr.tgl_perawatan if rawat_jl_dr else False),
-                    'jam_rawat': vals.get('rawat_jl_dr_jam_rawat', rawat_jl_dr.jam_rawat if rawat_jl_dr else 0.0),
-                    'material': vals.get('rawat_jl_dr_material', rawat_jl_dr.material if rawat_jl_dr else 0.0),
-                    'bhp': vals.get('rawat_jl_dr_bhp', rawat_jl_dr.bhp if rawat_jl_dr else 0.0),
-                    'tarif_tindakandr': vals.get('rawat_jl_dr_tarif_tindakandr', rawat_jl_dr.tarif_tindakandr if rawat_jl_dr else 0.0),
-                    'kso': vals.get('rawat_jl_dr_kso', rawat_jl_dr.kso if rawat_jl_dr else 0.0),
-                    'menejemen': vals.get('rawat_jl_dr_menejemen', rawat_jl_dr.menejemen if rawat_jl_dr else 0.0),
-                    'biaya_rawat': vals.get('rawat_jl_dr_biaya_rawat', rawat_jl_dr.biaya_rawat if rawat_jl_dr else 0.0),
-                    'stts_bayar': vals.get('rawat_jl_dr_stts_bayar', rawat_jl_dr.stts_bayar if rawat_jl_dr else 'Belum'),
-                }
-                if rawat_jl_dr:
-                    rawat_jl_dr.write(dr_vals)
-                else:
-                    self.env['cdn.rawat_jl_dr'].create(dr_vals)
+        if any(key.startswith('diagnosa_pasien_') for key in vals):
+            # Get reg_periksa_id safely
+            reg_periksa_id = False
+            if vals.get('diagnosa_pasien_reg_periksa_id'):
+                reg_periksa_id = vals['diagnosa_pasien_reg_periksa_id']
+            elif self.id_reg_periksa:
+                reg_periksa_id = self.id_reg_periksa.id
+
+            # Get status safely
+            status = 'Ralan'
+            if vals.get('diagnosa_pasien_status'):
+                status = vals['diagnosa_pasien_status']
+            elif diagnosa_pasien and hasattr(diagnosa_pasien, 'status'):
+                status = diagnosa_pasien.status
+
+            # Get prioritas safely
+            prioritas = 1
+            if vals.get('diagnosa_pasien_prioritas'):
+                prioritas = vals['diagnosa_pasien_prioritas']
+            elif diagnosa_pasien and hasattr(diagnosa_pasien, 'prioritas'):
+                prioritas = diagnosa_pasien.prioritas
+
+            # Get status_penyakit safely
+            status_penyakit = 'Baru'
+            if vals.get('diagnosa_pasien_status_penyakit'):
+                status_penyakit = vals['diagnosa_pasien_status_penyakit']
+            elif diagnosa_pasien and hasattr(diagnosa_pasien, 'status_penyakit'):
+                status_penyakit = diagnosa_pasien.status_penyakit
+
+            diagnosa_vals = {
+                'no_rawat': self.no_rawat,
+                'status': status,
+                'prioritas': prioritas,
+                'status_penyakit': status_penyakit,
+                'reg_periksa_id': reg_periksa_id,
+                'penyakit_id': [(6, 0, self.diagnosa_pasien_penyakit_id.ids)] if self.diagnosa_pasien_penyakit_id else [(6, 0, [])],
+            }
+
+            if diagnosa_pasien:
+                diagnosa_pasien.write(diagnosa_vals)
+            else:
+                self.env['cdn.diagnosa_pasien'].create(diagnosa_vals)
+
 
             # Prepare values for rawat_jl_pr
-            if any(key.startswith('rawat_jl_pr_') for key in vals):
-                pr_vals = {
-                    'no_rawat': self.no_rawat,
-                    'kd_jenis_prw': vals.get('rawat_jl_pr_kd_jenis_prw', rawat_jl_pr.kd_jenis_prw.id if rawat_jl_pr else False),
-                    'nip': vals.get('rawat_jl_pr_nip', rawat_jl_pr.nip if rawat_jl_pr else False),
-                    'tgl_perawatan': vals.get('rawat_jl_pr_tgl_perawatan', rawat_jl_pr.tgl_perawatan if rawat_jl_pr else False),
-                    'jam_rawat': vals.get('rawat_jl_pr_jam_rawat', rawat_jl_pr.jam_rawat if rawat_jl_pr else 0.0),
-                    'material': vals.get('rawat_jl_pr_material', rawat_jl_pr.material if rawat_jl_pr else 0.0),
-                    'bhp': vals.get('rawat_jl_pr_bhp', rawat_jl_pr.bhp if rawat_jl_pr else 0.0),
-                    'tarif_tindakanpr': vals.get('rawat_jl_pr_tarif_tindakanpr', rawat_jl_pr.tarif_tindakanpr if rawat_jl_pr else 0.0),
-                    'kso': vals.get('rawat_jl_pr_kso', rawat_jl_pr.kso if rawat_jl_pr else 0.0),
-                    'menejemen': vals.get('rawat_jl_pr_menejemen', rawat_jl_pr.menejemen if rawat_jl_pr else 0.0),
-                    'biaya_rawat': vals.get('rawat_jl_pr_biaya_rawat', rawat_jl_pr.biaya_rawat if rawat_jl_pr else 0.0),
-                    'stts_bayar': vals.get('rawat_jl_pr_stts_bayar', rawat_jl_pr.stts_bayar if rawat_jl_pr else 'Belum'),
-                }
-                if rawat_jl_pr:
-                    rawat_jl_pr.write(pr_vals)
-                else:
-                    self.env['cdn.rawat_jl_pr'].create(pr_vals)
+        if any(key.startswith('rawat_jl_pr_') for key in vals):
+            pr_vals = {
+                'no_rawat': self.no_rawat,
+                'kd_jenis_prw': vals.get('rawat_jl_pr_kd_jenis_prw', rawat_jl_pr.kd_jenis_prw.id if rawat_jl_pr else False),
+                'nip': vals.get('rawat_jl_pr_nip', rawat_jl_pr.nip if rawat_jl_pr else False),
+                'tgl_perawatan': vals.get('rawat_jl_pr_tgl_perawatan', rawat_jl_pr.tgl_perawatan if rawat_jl_pr else False),
+                'jam_rawat': vals.get('rawat_jl_pr_jam_rawat', rawat_jl_pr.jam_rawat if rawat_jl_pr else 0.0),
+                'material': vals.get('rawat_jl_pr_material', rawat_jl_pr.material if rawat_jl_pr else 0.0),
+                'bhp': vals.get('rawat_jl_pr_bhp', rawat_jl_pr.bhp if rawat_jl_pr else 0.0),
+                'tarif_tindakanpr': vals.get('rawat_jl_pr_tarif_tindakanpr', rawat_jl_pr.tarif_tindakanpr if rawat_jl_pr else 0.0),
+                'kso': vals.get('rawat_jl_pr_kso', rawat_jl_pr.kso if rawat_jl_pr else 0.0),
+                'menejemen': vals.get('rawat_jl_pr_menejemen', rawat_jl_pr.menejemen if rawat_jl_pr else 0.0),
+                'biaya_rawat': vals.get('rawat_jl_pr_biaya_rawat', rawat_jl_pr.biaya_rawat if rawat_jl_pr else 0.0),
+                'stts_bayar': vals.get('rawat_jl_pr_stts_bayar', rawat_jl_pr.stts_bayar if rawat_jl_pr else 'Belum'),
+            }
+            if rawat_jl_pr:
+                rawat_jl_pr.write(pr_vals)
+            else:
+                self.env['cdn.rawat_jl_pr'].create(pr_vals)
 
-            # Prepare values for pemeriksaan_ralan
-            if any(key.startswith('pemeriksaan_ralan_') for key in vals):
-                pemeriksaan_vals = {
-                    'no_rawat': self.no_rawat,
-                    'tgl_perawatan': vals.get('pemeriksaan_ralan_tgl_perawatan', pemeriksaan_ralan.tgl_perawatan if pemeriksaan_ralan else False),
-                    'jam_rawat': vals.get('pemeriksaan_ralan_jam_rawat', pemeriksaan_ralan.jam_rawat if pemeriksaan_ralan else 0.0),
-                    'suhu_tubuh': vals.get('pemeriksaan_ralan_suhu_tubuh', pemeriksaan_ralan.suhu_tubuh if pemeriksaan_ralan else ''),
-                    'tensi': vals.get('pemeriksaan_ralan_tensi', pemeriksaan_ralan.tensi if pemeriksaan_ralan else ''),
-                    'nadi': vals.get('pemeriksaan_ralan_nadi', pemeriksaan_ralan.nadi if pemeriksaan_ralan else ''),
-                    'respirasi': vals.get('pemeriksaan_ralan_respirasi', pemeriksaan_ralan.respirasi if pemeriksaan_ralan else ''),
-                    'tinggi': vals.get('pemeriksaan_ralan_tinggi', pemeriksaan_ralan.tinggi if pemeriksaan_ralan else ''),
-                    'berat': vals.get('pemeriksaan_ralan_berat', pemeriksaan_ralan.berat if pemeriksaan_ralan else ''),
-                    'spo2': vals.get('pemeriksaan_ralan_spo2', pemeriksaan_ralan.spo2 if pemeriksaan_ralan else ''),
-                    'gcs': vals.get('pemeriksaan_ralan_gcs', pemeriksaan_ralan.gcs if pemeriksaan_ralan else ''),
-                    'kesadaran': vals.get('pemeriksaan_ralan_kesadaran', pemeriksaan_ralan.kesadaran if pemeriksaan_ralan else 'Compos Mentis'),
-                    'keluhan': vals.get('pemeriksaan_ralan_keluhan', pemeriksaan_ralan.keluhan if pemeriksaan_ralan else ''),
-                    'pemeriksaan': vals.get('pemeriksaan_ralan_pemeriksaan', pemeriksaan_ralan.pemeriksaan if pemeriksaan_ralan else ''),
-                    'alergi': vals.get('pemeriksaan_ralan_alergi', pemeriksaan_ralan.alergi if pemeriksaan_ralan else ''),
-                    'lingkar_perut': vals.get('pemeriksaan_ralan_lingkar_perut', pemeriksaan_ralan.lingkar_perut if pemeriksaan_ralan else ''),
-                    'rtl': vals.get('pemeriksaan_ralan_rtl', pemeriksaan_ralan.rtl if pemeriksaan_ralan else ''),
-                    'penilaian': vals.get('pemeriksaan_ralan_penilaian', pemeriksaan_ralan.penilaian if pemeriksaan_ralan else ''),
-                    'instruksi': vals.get('pemeriksaan_ralan_instruksi', pemeriksaan_ralan.instruksi if pemeriksaan_ralan else ''),
-                    'evaluasi': vals.get('pemeriksaan_ralan_evaluasi', pemeriksaan_ralan.evaluasi if pemeriksaan_ralan else ''),
-                    'nip': vals.get('pemeriksaan_ralan_nip', pemeriksaan_ralan.nip if pemeriksaan_ralan else ''),
-                }
-                if pemeriksaan_ralan:
-                    pemeriksaan_ralan.write(pemeriksaan_vals)
-                else:
-                    self.env['cdn.pemeriksaan_ralan'].create(pemeriksaan_vals)
+        # Prepare values for pemeriksaan_ralan
+        if any(key.startswith('pemeriksaan_ralan_') for key in vals):
+            pemeriksaan_vals = {
+                'no_rawat': self.no_rawat,
+                'tgl_perawatan': vals.get('pemeriksaan_ralan_tgl_perawatan', pemeriksaan_ralan.tgl_perawatan if pemeriksaan_ralan else False),
+                'jam_rawat': vals.get('pemeriksaan_ralan_jam_rawat', pemeriksaan_ralan.jam_rawat if pemeriksaan_ralan else 0.0),
+                'suhu_tubuh': vals.get('pemeriksaan_ralan_suhu_tubuh', pemeriksaan_ralan.suhu_tubuh if pemeriksaan_ralan else ''),
+                'tensi': vals.get('pemeriksaan_ralan_tensi', pemeriksaan_ralan.tensi if pemeriksaan_ralan else ''),
+                'nadi': vals.get('pemeriksaan_ralan_nadi', pemeriksaan_ralan.nadi if pemeriksaan_ralan else ''),
+                'respirasi': vals.get('pemeriksaan_ralan_respirasi', pemeriksaan_ralan.respirasi if pemeriksaan_ralan else ''),
+                'tinggi': vals.get('pemeriksaan_ralan_tinggi', pemeriksaan_ralan.tinggi if pemeriksaan_ralan else ''),
+                'berat': vals.get('pemeriksaan_ralan_berat', pemeriksaan_ralan.berat if pemeriksaan_ralan else ''),
+                'spo2': vals.get('pemeriksaan_ralan_spo2', pemeriksaan_ralan.spo2 if pemeriksaan_ralan else ''),
+                'gcs': vals.get('pemeriksaan_ralan_gcs', pemeriksaan_ralan.gcs if pemeriksaan_ralan else ''),
+                'kesadaran': vals.get('pemeriksaan_ralan_kesadaran', pemeriksaan_ralan.kesadaran if pemeriksaan_ralan else 'Compos Mentis'),
+                'keluhan': vals.get('pemeriksaan_ralan_keluhan', pemeriksaan_ralan.keluhan if pemeriksaan_ralan else ''),
+                'pemeriksaan': vals.get('pemeriksaan_ralan_pemeriksaan', pemeriksaan_ralan.pemeriksaan if pemeriksaan_ralan else ''),
+                'alergi': vals.get('pemeriksaan_ralan_alergi', pemeriksaan_ralan.alergi if pemeriksaan_ralan else ''),
+                'lingkar_perut': vals.get('pemeriksaan_ralan_lingkar_perut', pemeriksaan_ralan.lingkar_perut if pemeriksaan_ralan else ''),
+                'rtl': vals.get('pemeriksaan_ralan_rtl', pemeriksaan_ralan.rtl if pemeriksaan_ralan else ''),
+                'penilaian': vals.get('pemeriksaan_ralan_penilaian', pemeriksaan_ralan.penilaian if pemeriksaan_ralan else ''),
+                'instruksi': vals.get('pemeriksaan_ralan_instruksi', pemeriksaan_ralan.instruksi if pemeriksaan_ralan else ''),
+                'evaluasi': vals.get('pemeriksaan_ralan_evaluasi', pemeriksaan_ralan.evaluasi if pemeriksaan_ralan else ''),
+                'nip': vals.get('pemeriksaan_ralan_nip', pemeriksaan_ralan.nip if pemeriksaan_ralan else ''),
+            }
+            if pemeriksaan_ralan:
+                pemeriksaan_ralan.write(pemeriksaan_vals)
+            else:
+                self.env['cdn.pemeriksaan_ralan'].create(pemeriksaan_vals)
 
-            # Prepare values for diagnosa_pasien
-            if any(key.startswith('diagnosa_pasien_') for key in vals):
-                diagnosa_vals = {
-                    'no_rawat': self.no_rawat,
-                    'status': vals.get('diagnosa_pasien_status', diagnosa_pasien.status if diagnosa_pasien else 'Ralan'),
-                    'prioritas': vals.get('diagnosa_pasien_prioritas', diagnosa_pasien.prioritas if diagnosa_pasien else 1),
-                    'status_penyakit': vals.get('diagnosa_pasien_status_penyakit', diagnosa_pasien.status_penyakit if diagnosa_pasien else 'Baru'),
-                    'reg_periksa_id': vals.get('diagnosa_pasien_reg_periksa_id', diagnosa_pasien.reg_periksa_id.id if diagnosa_pasien else False),
-                    'penyakit_id': vals.get('diagnosa_pasien_penyakit_id', diagnosa_pasien.penyakit_id.id if diagnosa_pasien else False),
-                }
-                if diagnosa_pasien:
-                    diagnosa_pasien.write(diagnosa_vals)
-                else:
-                    self.env['cdn.diagnosa_pasien'].create(diagnosa_vals)
+        # Prepare values for diagnosa_pasien
+        if any(key.startswith('diagnosa_pasien_') for key in vals):
+            diagnosa_vals = {
+                'no_rawat': self.no_rawat,
+                'status': vals.get('diagnosa_pasien_status', diagnosa_pasien.status if diagnosa_pasien else 'Ralan'),
+                'prioritas': vals.get('diagnosa_pasien_prioritas', diagnosa_pasien.prioritas if diagnosa_pasien else 1),
+                'status_penyakit': vals.get('diagnosa_pasien_status_penyakit', diagnosa_pasien.status_penyakit if diagnosa_pasien else 'Baru'),
+                'reg_periksa_id': self.id_reg_periksa.id,
+                'penyakit_id': [(6, 0, self.diagnosa_pasien_penyakit_id.ids)] if self.diagnosa_pasien_penyakit_id else [(6, 0, [])],
+            }
+
+            if diagnosa_pasien:
+                diagnosa_pasien.write(diagnosa_vals)
+            else:
+                self.env['cdn.diagnosa_pasien'].create(diagnosa_vals)
+
 
     @api.model
     def create(self, vals):

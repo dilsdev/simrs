@@ -23,6 +23,6 @@ class Diagnosa_pasien(models.Model):
     reg_periksa_id = fields.Many2one('reg.periksa', string='No Rawat', ondelete='cascade')
     
     # Relasi dengan model penyakit
-    penyakit_id = fields.Many2one('cdn.penyakit', string='Kode Penyakit', ondelete='cascade', nullable=True)
+    penyakit_id = fields.Many2many('cdn.penyakit', string='Kode Penyakit', ondelete='cascade', nullable=True)
 
 

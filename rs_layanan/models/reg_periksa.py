@@ -9,7 +9,7 @@ class RegPeriksa(models.Model):
     _rec_name = 'no_rawat'
 
     no_reg = fields.Char(string='No Registrasi', required=False) 
-    no_rawat = fields.Char(string='No Rawat', required=True, copy=False, readonly=True, default='RWT/20XX/XXX', index=True)
+    no_rawat = fields.Char(string='No Rawat', required=True, copy=False, readonly=True, default=f'RW/{datetime.now().year}/XXXX', index=True)
     tgl_registrasi = fields.Date(string='Tanggal Registrasi')
     jam_reg = fields.Float(string='Jam Registrasi', help="Gunakan format desimal untuk jam, misalnya 13.30 untuk 13:30.")
     kd_dokter = fields.Many2one('cdn.doctor', string='Kode Dokter', ondelete='cascade', index=True)
@@ -31,7 +31,6 @@ class RegPeriksa(models.Model):
     ], string='Status', default='Belum')
     
     stts_daftar = fields.Selection([
-        ('-', '-'),
         ('Lama', 'Lama'),
         ('Baru', 'Baru')
     ], string='Status Daftar', required=True)
@@ -96,36 +95,72 @@ class RegPeriksa(models.Model):
         for record in self:
             record.stts = 'Batal'
 
+    def write(self, vals):
+        # Panggil write asli terlebih dahulu
+        result = super(RegPeriksa, self).write(vals)
+        
+        # Update record terkait di rawat_jalan
+        for record in self:
+            rawat_jalan = self.env['cdn.rawat_jalan'].search([
+                ('no_rawat', '=', record.no_rawat)
+            ], limit=1)
+            
+            if rawat_jalan:
+                rawat_jalan_vals = {
+                    'id_reg_periksa': record.id,
+                    'kd_dokter': record.kd_dokter.id if record.kd_dokter else False,
+                    'no_rkm_medis': record.no_rkm_medis.id if record.no_rkm_medis else False,
+                    'pasien': record.no_rkm_medis.name if record.no_rkm_medis else False,
+                }
+                try:
+                    rawat_jalan.write(rawat_jalan_vals)
+                except Exception as e:
+                    _logger.error(f"Error updating rawat_jalan record: {str(e)}")
+                    raise
+        
+        return result
+
+    def unlink(self):
+        # Hapus record terkait di rawat_jalan sebelum menghapus reg_periksa
+        for record in self:
+            rawat_jalan = self.env['cdn.rawat_jalan'].search([
+                ('no_rawat', '=', record.no_rawat)
+            ])
+            if rawat_jalan:
+                try:
+                    rawat_jalan.unlink()
+                except Exception as e:
+                    _logger.error(f"Error deleting rawat_jalan record: {str(e)}")
+                    raise
+        
+        # Setelah itu baru hapus record reg_periksa
+        return super(RegPeriksa, self).unlink()
+
     @api.model
     def create(self, vals):
-        if vals.get('no_rawat', 'Baru') == 'Baru':
-            current_year = datetime.now().year
-            last_record = self.search([('no_rawat', 'like', f'RWT/{current_year}/%')], order='id desc', limit=1)
+        # Generate no_rawat first
+        year_short = datetime.now().year
+        
+        # Create temporary record to get ID
+        temp_record = super(RegPeriksa, self).create(vals)
+        record_id = f'{temp_record.id:05d}'
+        no_rawat = f'RWT/{year_short}/{record_id}'
+        
+        # Update the record with final no_rawat
+        temp_record.write({'no_rawat': no_rawat})
+        
+        # Create rawat_jalan record AFTER reg_periksa is fully created
+        if temp_record.id:
+            try:
+                self.env['cdn.rawat_jalan'].create({
+                    'id_reg_periksa': temp_record.id,
+                    'no_rawat': no_rawat,
+                    'kd_dokter': temp_record.kd_dokter.id if temp_record.kd_dokter else False,
+                    'no_rkm_medis': temp_record.no_rkm_medis.id if temp_record.no_rkm_medis else False,
+                    'pasien': temp_record.no_rkm_medis.name if temp_record.no_rkm_medis else False,
+                })
+            except Exception as e:
+                _logger.error(f"Error creating rawat_jalan record: {str(e)}")
+                raise
 
-            if last_record:
-                last_id = last_record.no_rawat
-                try:
-                    last_number = int(last_id.split('/')[-1])
-                    new_number = last_number + 1
-                except ValueError:
-                    new_number = 1
-            else:
-                new_number = 1
-
-            vals['no_rawat'] = f'RWT/{current_year}/{new_number:03d}'
-
-        # Buat record di cdn.reg_periksa
-        reg_periksa = super(RegPeriksa, self).create(vals)
-
-        # Gunakan ID dari reg_periksa untuk no_rawat di cdn.rawat_jalan
-        self.env['cdn.rawat_jalan'].create({
-            'id_reg_periksa':self.id,
-            'diagnosa_pasien_reg_periksa_id':self.id,
-            'no_rawat': reg_periksa.no_rawat,  
-            'kd_dokter': reg_periksa.kd_dokter.id,
-            'no_rkm_medis': reg_periksa.no_rkm_medis.id,
-            'pasien': reg_periksa.no_rkm_medis.name,  
-        })
-
-        return reg_periksa
-
+        return temp_record

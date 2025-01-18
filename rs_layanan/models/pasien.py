@@ -9,7 +9,7 @@ class Pasien(models.Model):
     _description = 'Data Pasien'
     _inherits = {'res.partner': 'partner_id'}
     # Field Definitions
-    no_rkm_medis = fields.Char(string='No Rekam Medis', required=True, copy=False, readonly=True, default='NRM/20XX/XXX')
+    no_rkm_medis = fields.Char(string='No Rekam Medis', required=True, copy=False, readonly=True, default='RM/20XX/XXX')
     partner_id = fields.Many2one('res.partner', string="Contact", required=False, ondelete="cascade")
     no_ktp = fields.Char(string="Nomor KTP", required=True)
     jk = fields.Selection([('L', 'Laki-laki'), ('P', 'Perempuan')], string="Jenis Kelamin", required=True)
@@ -85,7 +85,7 @@ class Pasien(models.Model):
         _logger.debug("Creating Pasien with values: %s", vals)
         if vals.get('no_rkm_medis', 'Baru') == 'Baru':
             current_year = datetime.now().year
-            last_record = self.search([('no_rkm_medis', 'like', f'KMR/{current_year}/%')], order='id desc', limit=1)
+            last_record = self.search([('no_rkm_medis', 'like', f'RM/{current_year}/%')], order='id desc', limit=1)
 
             if last_record:
                 last_id = last_record.no_rkm_medis
@@ -97,7 +97,7 @@ class Pasien(models.Model):
             else:
                 new_number = 1
 
-            vals['no_rkm_medis'] = f'KMR/{current_year}/{new_number:03d}'
+            vals['no_rkm_medis'] = f'RM/{current_year}/{new_number:03d}'
 
         self._validate_many2one_fields(vals)
         return super(Pasien, self).create(vals)
