@@ -15,9 +15,7 @@ class Rawat_jalan(models.Model):
     kd_dokter = fields.Many2one('cdn.doctor', string='Dokter', readonly=True, store=True)
     no_rkm_medis = fields.Many2one('cdn.pasien', string='Rekam Medis', readonly=True, store=True)
     pasien = fields.Char(string='Pasien', readonly=True, store=True)
-
-    
-
+    kd_poli = fields.Many2one('cdn.poliklinik', string='Kode Poliklinik', ondelete='cascade', index=True)
 
     # Rawat Jalan DR Fields
     rawat_jl_dr_no_rawat = fields.Char(string='No Rawat', index=True)

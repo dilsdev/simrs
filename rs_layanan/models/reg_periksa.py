@@ -69,10 +69,12 @@ class RegPeriksa(models.Model):
             self.p_jawab = self.no_rkm_medis.p_jawab or ''
             self.hubunganpj = self.no_rkm_medis.keluarga or ''
             self.almt_pj = self.no_rkm_medis.alamatpj or ''
+            self.kd_poli = self.no_rkm_medis.kd_poli or ''
         else:
             self.p_jawab = ''
             self.hubunganpj = ''
             self.almt_pj = ''
+            self.kd_poli = ''
 
     @api.onchange('stts_daftar', 'kd_poli')
     def _onchange_stts_daftar(self):
@@ -111,6 +113,7 @@ class RegPeriksa(models.Model):
                     'kd_dokter': record.kd_dokter.id if record.kd_dokter else False,
                     'no_rkm_medis': record.no_rkm_medis.id if record.no_rkm_medis else False,
                     'pasien': record.no_rkm_medis.name if record.no_rkm_medis else False,
+                    'kd_poli': record.kd_poli.id if record.kd_poli else False,
                 }
                 try:
                     rawat_jalan.write(rawat_jalan_vals)
@@ -158,6 +161,7 @@ class RegPeriksa(models.Model):
                     'kd_dokter': temp_record.kd_dokter.id if temp_record.kd_dokter else False,
                     'no_rkm_medis': temp_record.no_rkm_medis.id if temp_record.no_rkm_medis else False,
                     'pasien': temp_record.no_rkm_medis.name if temp_record.no_rkm_medis else False,
+                    'kd_poli': temp_record.kd_poli.id if temp_record.kd_poli else False,
                 })
             except Exception as e:
                 _logger.error(f"Error creating rawat_jalan record: {str(e)}")
